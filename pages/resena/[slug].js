@@ -95,7 +95,14 @@ export default function DetalleLibro({ libro }) {
           {libro.para_quien && (
             <div style={{ background:'#edf4e8', border:'1px solid var(--border)', borderRadius:12, padding:'1.25rem 1.5rem', marginBottom:'1.5rem' }}>
               <p style={{ fontSize:11, fontFamily:'sans-serif', textTransform:'uppercase', letterSpacing:'0.1em', color:'var(--text-muted)', margin:'0 0 0.75rem' }}>¿Para quién es?</p>
-              <p style={{ fontSize:15, color:'var(--text-body)', lineHeight:1.75 }}>{libro.para_quien}</p>
+              <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+                {libro.para_quien.split('|').map(p => p.trim()).filter(Boolean).map((punto, i) => (
+                  <div key={i} style={{ display:'flex', gap:10, alignItems:'flex-start' }}>
+                    <span style={{ color:'var(--text-accent)', fontSize:16, lineHeight:1.5, flexShrink:0 }}>✦</span>
+                    <p style={{ fontSize:15, color:'var(--text-body)', lineHeight:1.75, margin:0 }}>{punto}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
