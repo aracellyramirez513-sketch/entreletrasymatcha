@@ -160,7 +160,7 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
 
 function UniversosWidget() {
   return (
-    <div style={{ marginTop:'1.5rem' }}>
+    <div style={{ marginTop:'2rem', clear:'both', position:'relative' }}>
       <p style={{ fontSize:11, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--text-muted)', margin:'0 0 12px', fontFamily:'sans-serif' }}>
         🌌 Universos literarios
       </p>
@@ -178,10 +178,7 @@ function UniversosWidget() {
           <p style={{ fontSize:13, color:'#26215C', lineHeight:1.55, margin:'0 0 10px' }}>
             Explora los mundos donde las series se conectan entre sí.
           </p>
-          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-            <span style={{ fontSize:11, color:'#534AB7', fontFamily:'sans-serif', opacity:0.85 }}>
-              Series hermanas · tropes recurrentes
-            </span>
+          <div style={{ display:'flex', justifyContent:'flex-end', alignItems:'center' }}>
             <span style={{ fontSize:12, color:'#3C3489', fontFamily:'sans-serif', fontWeight:600, whiteSpace:'nowrap' }}>
               Ver todos →
             </span>
