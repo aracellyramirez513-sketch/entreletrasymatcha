@@ -19,16 +19,22 @@ const statusColors = {
 
 // 🌌 Paleta lavanda para órdenes (conecta visualmente con los universos)
 const ordenColors = {
-  bg:     '#F0EDF5',      // fondo lavanda muy suave
-  border: '#C4BBD0',      // borde lavanda medio
-  accent: '#6B5B8C',      // acento morado suave (para borde izquierdo y textos)
-  accentDark: '#4A3F6B',  // morado más oscuro para títulos y contraste
-  pillBg: '#fff',         // fondo de los pills dentro de la card
-  tagBg:  '#E8E2F0',      // fondo de tropes
+  bg:     '#F0EDF5',
+  border: '#C4BBD0',
+  accent: '#6B5B8C',
+  accentDark: '#4A3F6B',
+  pillBg: '#fff',
+  tagBg:  '#E8E2F0',
 }
 
-const catKeys = ['todo', 'resena', 'vineta', 'rincon', 'orden']
-const categories = ['Todo','Entre libros','Entre viñetas','Desde mi rincón','Órdenes de lectura']
+// 🎨 Configuración de pills de filtro con emoji + color personalizado
+const catConfig = [
+  { key: 'todo',   label: 'Todo',                 emoji: '✨', bg: '#e8ede3', border: '#b0c8a0', color: '#5a7a50', activeBg: '#5a7a50' },
+  { key: 'resena', label: 'Entre libros',         emoji: '📖', bg: '#e8ede3', border: '#b0c8a0', color: '#5a7a50', activeBg: '#5a7a50' },
+  { key: 'vineta', label: 'Entre viñetas',        emoji: '🎨', bg: '#e4f0f5', border: '#aacfda', color: '#3a6a7a', activeBg: '#3a6a7a' },
+  { key: 'rincon', label: 'Desde mi rincón',      emoji: '🌿', bg: '#f5ede4', border: '#d4bfaa', color: '#7a6a50', activeBg: '#7a6a50' },
+  { key: 'orden',  label: 'Órdenes de lectura',   emoji: '📚', bg: '#F0EDF5', border: '#C4BBD0', color: '#6B5B8C', activeBg: '#6B5B8C' },
+]
 
 export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
   const [activeCat, setActiveCat] = useState('todo')
@@ -91,19 +97,34 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
           <FavoritosRow libros={librosFavoritos} />
         )}
 
-        {!isFiltered && (
-          <UniversosBanner />
-        )}
-
         <div style={{ padding:'1.5rem 0 1rem' }}>
-          {/* Filtros de categoría */}
+          {/* Filtros de categoría con emojis y colores propios */}
           <div style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:'1.5rem' }}>
-            {categories.map((cat, i) => (
-              <button key={cat} className={`btn btn-pill ${activeCat===catKeys[i]?'active':''}`}
-                onClick={() => setActiveCat(catKeys[i])}>
-                {cat}
-              </button>
-            ))}
+            {catConfig.map(cat => {
+              const isActive = activeCat === cat.key
+              return (
+                <button key={cat.key}
+                  onClick={() => setActiveCat(cat.key)}
+                  style={{
+                    display:'inline-flex',
+                    alignItems:'center',
+                    gap:6,
+                    padding:'6px 14px',
+                    borderRadius:20,
+                    fontSize:13,
+                    fontFamily:'sans-serif',
+                    fontWeight:500,
+                    border: `1px solid ${cat.border}`,
+                    background: isActive ? cat.activeBg : cat.bg,
+                    color: isActive ? '#fff' : cat.color,
+                    cursor:'pointer',
+                    transition:'all 0.15s'
+                  }}>
+                  <span style={{ fontSize:14 }}>{cat.emoji}</span>
+                  <span>{cat.label}</span>
+                </button>
+              )
+            })}
           </div>
 
           <div className="grid-sidebar">
@@ -115,9 +136,12 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
               }
             </div>
 
-            {/* Sidebar */}
-            <Sidebar leyendo={leyendo} search={search} setSearch={setSearch}
-              activeTag={activeTag} allTags={allTags} handleTag={handleTag} />
+            {/* Sidebar + widget de universos */}
+            <div>
+              <Sidebar leyendo={leyendo} search={search} setSearch={setSearch}
+                activeTag={activeTag} allTags={allTags} handleTag={handleTag} />
+              <UniversosWidget />
+            </div>
           </div>
         </div>
 
@@ -134,22 +158,37 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
   )
 }
 
-function UniversosBanner() {
+function UniversosWidget() {
   return (
-    <Link href="/universos-literarios" style={{ textDecoration:'none' }}>
-      <div style={{ margin:'1.5rem 0', background:'#EEEDFE', border:'1px solid #AFA9EC', borderRadius:14, padding:'1rem 1.25rem', display:'flex', alignItems:'center', justifyContent:'space-between', gap:14, cursor:'pointer', transition:'transform 0.15s, box-shadow 0.15s' }}
-        onMouseEnter={e => { e.currentTarget.style.transform='translateY(-1px)'; e.currentTarget.style.boxShadow='0 4px 14px rgba(60, 52, 137, 0.12)' }}
+    <div style={{ marginTop:'1.5rem' }}>
+      <p style={{ fontSize:11, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--text-muted)', margin:'0 0 12px', fontFamily:'sans-serif' }}>
+        🌌 Universos literarios
+      </p>
+      <Link href="/universos-literarios" style={{ textDecoration:'none' }}>
+        <div style={{
+          background:'#EEEDFE',
+          border:'1px solid #AFA9EC',
+          borderRadius:12,
+          padding:'1rem',
+          cursor:'pointer',
+          transition:'transform 0.15s, box-shadow 0.15s'
+        }}
+        onMouseEnter={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow='0 4px 14px rgba(60, 52, 137, 0.12)' }}
         onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='none' }}>
-        <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-          <span style={{ fontSize:24 }}>🌌</span>
-          <div>
-            <p style={{ fontSize:10, letterSpacing:'0.14em', textTransform:'uppercase', color:'#3C3489', fontFamily:'sans-serif', fontWeight:600, margin:'0 0 2px' }}>Explora los mundos conectados</p>
-            <p style={{ fontSize:15, fontWeight:700, color:'#26215C', margin:0, fontFamily:'Georgia, serif' }}>Universos literarios</p>
+          <p style={{ fontSize:13, color:'#26215C', lineHeight:1.55, margin:'0 0 10px' }}>
+            Explora los mundos donde las series se conectan entre sí.
+          </p>
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+            <span style={{ fontSize:11, color:'#534AB7', fontFamily:'sans-serif', opacity:0.85 }}>
+              Series hermanas · tropes recurrentes
+            </span>
+            <span style={{ fontSize:12, color:'#3C3489', fontFamily:'sans-serif', fontWeight:600, whiteSpace:'nowrap' }}>
+              Ver todos →
+            </span>
           </div>
         </div>
-        <span style={{ fontSize:13, color:'#3C3489', fontFamily:'sans-serif', fontWeight:500, whiteSpace:'nowrap' }}>Ver todos →</span>
-      </div>
-    </Link>
+      </Link>
+    </div>
   )
 }
 
@@ -318,7 +357,7 @@ function ItemCard({ item, activeTag, handleTag }) {
     )
   }
 
-  // Orden de lectura — 🌌 estilo lavanda (conectado con universos)
+  // Orden de lectura — 🌌 estilo lavanda
   if (item.type === 'orden') {
     const tropes = Array.isArray(item.tropes) ? item.tropes : []
     return (
@@ -366,7 +405,6 @@ function ItemCard({ item, activeTag, handleTag }) {
               </div>
             </div>
           </div>
-          {/* Mini portadas */}
           {item.imagenes_libros?.length > 0 && (
             <div style={{ display:'flex', gap:6, padding:'0 1rem 1rem', overflowX:'auto' }}>
               {item.imagenes_libros.slice(0,8).map((img, i) => (
@@ -391,6 +429,6 @@ export async function getStaticProps() {
   const { libros, vinetas, rincon, leyendo, ordenes } = await getTodo()
   return {
     props: { libros, vinetas, rincon, leyendo, ordenes },
-    revalidate: 60, // ISR: regenera cada 60 segundos
+    revalidate: 60,
   }
 }
