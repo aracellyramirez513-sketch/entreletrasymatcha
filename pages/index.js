@@ -81,6 +81,10 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
           <FavoritosRow libros={librosFavoritos} />
         )}
 
+        {!isFiltered && (
+          <UniversosBanner />
+        )}
+
         <div style={{ padding:'1.5rem 0 1rem' }}>
           {/* Filtros de categoría */}
           <div style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:'1.5rem' }}>
@@ -117,6 +121,25 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
         <Footer />
       </div>
     </>
+  )
+}
+
+function UniversosBanner() {
+  return (
+    <Link href="/universos-literarios" style={{ textDecoration:'none' }}>
+      <div style={{ margin:'1.5rem 0', background:'#EEEDFE', border:'1px solid #AFA9EC', borderRadius:14, padding:'1rem 1.25rem', display:'flex', alignItems:'center', justifyContent:'space-between', gap:14, cursor:'pointer', transition:'transform 0.15s, box-shadow 0.15s' }}
+        onMouseEnter={e => { e.currentTarget.style.transform='translateY(-1px)'; e.currentTarget.style.boxShadow='0 4px 14px rgba(60, 52, 137, 0.12)' }}
+        onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='none' }}>
+        <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+          <span style={{ fontSize:24 }}>🌌</span>
+          <div>
+            <p style={{ fontSize:10, letterSpacing:'0.14em', textTransform:'uppercase', color:'#3C3489', fontFamily:'sans-serif', fontWeight:600, margin:'0 0 2px' }}>Explora los mundos conectados</p>
+            <p style={{ fontSize:15, fontWeight:700, color:'#26215C', margin:0, fontFamily:'Georgia, serif' }}>Universos literarios</p>
+          </div>
+        </div>
+        <span style={{ fontSize:13, color:'#3C3489', fontFamily:'sans-serif', fontWeight:500, whiteSpace:'nowrap' }}>Ver todos →</span>
+      </div>
+    </Link>
   )
 }
 
