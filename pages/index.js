@@ -136,12 +136,9 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
               }
             </div>
 
-            {/* Sidebar + widget de universos */}
-            <div>
-              <Sidebar leyendo={leyendo} search={search} setSearch={setSearch}
-                activeTag={activeTag} allTags={allTags} handleTag={handleTag} />
-              <UniversosWidget />
-            </div>
+            {/* Sidebar (ahora incluye el widget de Universos literarios adentro) */}
+            <Sidebar leyendo={leyendo} search={search} setSearch={setSearch}
+              activeTag={activeTag} allTags={allTags} handleTag={handleTag} />
           </div>
         </div>
 
@@ -155,37 +152,6 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
         <Footer />
       </div>
     </>
-  )
-}
-
-function UniversosWidget() {
-  return (
-    <div style={{ marginTop:'2rem', clear:'both', position:'relative' }}>
-      <p style={{ fontSize:11, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--text-muted)', margin:'0 0 12px', fontFamily:'sans-serif' }}>
-        🌌 Universos literarios
-      </p>
-      <Link href="/universos-literarios" style={{ textDecoration:'none' }}>
-        <div style={{
-          background:'#EEEDFE',
-          border:'1px solid #AFA9EC',
-          borderRadius:12,
-          padding:'1rem',
-          cursor:'pointer',
-          transition:'transform 0.15s, box-shadow 0.15s'
-        }}
-        onMouseEnter={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow='0 4px 14px rgba(60, 52, 137, 0.12)' }}
-        onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='none' }}>
-          <p style={{ fontSize:13, color:'#26215C', lineHeight:1.55, margin:'0 0 10px' }}>
-            Explora los mundos donde las series se conectan entre sí.
-          </p>
-          <div style={{ display:'flex', justifyContent:'flex-end', alignItems:'center' }}>
-            <span style={{ fontSize:12, color:'#3C3489', fontFamily:'sans-serif', fontWeight:600, whiteSpace:'nowrap' }}>
-              Ver todos →
-            </span>
-          </div>
-        </div>
-      </Link>
-    </div>
   )
 }
 
