@@ -40,15 +40,17 @@ export default function DetalleOrden({ orden }) {
         <div style={{ maxWidth:700, margin:'0 auto', padding:'1.5rem 0 4rem' }}>
           <Link href="/" style={{ display:'inline-block', marginBottom:'1.5rem', color:'var(--text-accent)', fontSize:14, fontFamily:'sans-serif' }}>← Volver</Link>
 
-          {/* Badge de universo si existe */}
+          {/* Badge de universo si existe — centrado */}
           {orden.universo && (
-            <Link href={`/universo/${orden.universo.slug}`} style={{ textDecoration:'none' }}>
-              <div style={{ display:'inline-flex', alignItems:'center', gap:8, background:'#EEEDFE', color:'#3C3489', border:'1px solid #AFA9EC', padding:'6px 14px', borderRadius:20, fontSize:12, fontFamily:'sans-serif', marginBottom:'1rem', cursor:'pointer', fontWeight:500 }}>
-                <span style={{ fontSize:14 }}>🌌</span>
-                <span>Parte del universo <strong style={{ fontWeight:700 }}>{orden.universo.nombre}</strong></span>
-                <span>→</span>
-              </div>
-            </Link>
+            <div style={{ textAlign:'center', marginBottom:'1.5rem' }}>
+              <Link href={`/universo/${orden.universo.slug}`} style={{ textDecoration:'none' }}>
+                <div style={{ display:'inline-flex', alignItems:'center', gap:8, background:'#EEEDFE', color:'#3C3489', border:'1px solid #AFA9EC', padding:'6px 14px', borderRadius:20, fontSize:12, fontFamily:'sans-serif', cursor:'pointer', fontWeight:500 }}>
+                  <span style={{ fontSize:14 }}>🌌</span>
+                  <span>Parte del universo <strong style={{ fontWeight:700 }}>{orden.universo.nombre}</strong></span>
+                  <span>→</span>
+                </div>
+              </Link>
+            </div>
           )}
 
           {/* Hero de la saga */}
