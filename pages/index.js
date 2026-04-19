@@ -25,6 +25,9 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
   const [activeTag, setActiveTag] = useState(null)
   const [search, setSearch]       = useState('')
 
+  const libroDestacado = useMemo(() => libros.find(l => l.destacado) || null, [libros])
+  const librosFavoritos = useMemo(() => libros.filter(l => l.favorito).slice(0, 5), [libros])
+
   const allItems = useMemo(() => { const items = [...libros, ...vinetas, ...rincon, ...ordenes]; return items.sort((a, b) => (b.fecha || "").localeCompare(a.fecha || "")); }, [libros, vinetas, rincon, ordenes])
 
   const allTags = useMemo(() => {
@@ -53,6 +56,8 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
     return items
   }, [allItems, activeCat, activeTag, search])
 
+  const isFiltered = activeCat !== 'todo' || activeTag || search
+
   function handleTag(tag) { setActiveTag(prev => prev===tag ? null : tag) }
 
   return (
@@ -67,6 +72,14 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
       <div className="container">
         <SiteHeader />
         <Perfil />
+
+        {!isFiltered && libroDestacado && (
+          <DestacadoCard libro={libroDestacado} />
+        )}
+
+        {!isFiltered && librosFavoritos.length > 0 && (
+          <FavoritosRow libros={librosFavoritos} />
+        )}
 
         <div style={{ padding:'1.5rem 0 1rem' }}>
           {/* Filtros de categoría */}
@@ -104,6 +117,55 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
         <Footer />
       </div>
     </>
+  )
+}
+
+function DestacadoCard({ libro }) {
+  return (
+    <Link href={`/resena/${libro.slug}`} style={{ textDecoration:'none' }}>
+      <div style={{ margin:'2rem 0 1rem', background:'var(--bg-sidebar)', border:'1px solid var(--border)', borderRadius:16, padding:'1.5rem', display:'grid', gridTemplateColumns:'140px 1fr', gap:20, cursor:'pointer', transition:'opacity 0.15s' }}
+        onMouseEnter={e => e.currentTarget.style.opacity='0.92'}
+        onMouseLeave={e => e.currentTarget.style.opacity='1'}>
+        <img src={libro.portada} alt={libro.titulo}
+          style={{ width:140, height:200, objectFit:'cover', borderRadius:8, border:'1px solid var(--border-warm)' }}
+          onError={e => { e.target.style.background='var(--bg-tag)'; e.target.src='' }} />
+        <div>
+          <span style={{ display:'inline-block', background:'var(--btn-bg)', color:'#fff', fontSize:10, padding:'4px 12px', borderRadius:20, fontFamily:'sans-serif', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:10 }}>★ Destacado</span>
+          <h2 style={{ fontSize:26, fontWeight:700, margin:'0 0 4px', color:'var(--text-dark)', lineHeight:1.2 }}>{libro.titulo}</h2>
+          {libro.serie && <p style={{ fontSize:13, color:'#9b7b5e', margin:'0 0 4px', fontFamily:'sans-serif', fontStyle:'italic' }}>{libro.serie}{libro.numero_serie ? ` · Libro ${libro.numero_serie}` : ''}</p>}
+          <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:8 }}>
+            <p style={{ fontSize:14, color:'var(--text-muted)', margin:0, fontFamily:'sans-serif' }}>{libro.autor}</p>
+            <Pill>{libro.categoria}</Pill>
+          </div>
+          <Stars n={libro.calificacion} size={16} />
+          <p style={{ fontSize:14, color:'var(--text-body)', lineHeight:1.65, margin:'10px 0 12px', display:'-webkit-box', WebkitLineClamp:3, WebkitBoxOrient:'vertical', overflow:'hidden' }}>{libro.sinopsis}</p>
+          <span style={{ fontSize:13, color:'var(--text-accent)', fontFamily:'sans-serif', fontWeight:500 }}>Leer la reseña completa →</span>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
+function FavoritosRow({ libros }) {
+  return (
+    <div style={{ margin:'1.5rem 0' }}>
+      <p style={{ fontSize:11, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--text-muted)', margin:'0 0 12px', fontFamily:'sans-serif' }}>★ Mis favoritos</p>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(5, 1fr)', gap:10 }}>
+        {libros.map(libro => (
+          <Link key={libro.id} href={`/resena/${libro.slug}`} style={{ textDecoration:'none' }}>
+            <div style={{ cursor:'pointer', transition:'transform 0.15s' }}
+              onMouseEnter={e => e.currentTarget.style.transform='translateY(-2px)'}
+              onMouseLeave={e => e.currentTarget.style.transform='translateY(0)'}>
+              <img src={libro.portada} alt={libro.titulo}
+                style={{ width:'100%', aspectRatio:'2/3', objectFit:'cover', borderRadius:6, border:'1px solid var(--border-warm)', marginBottom:6 }}
+                onError={e => { e.target.style.background='var(--bg-tag)'; e.target.src='' }} />
+              <p style={{ fontSize:12, fontWeight:700, color:'var(--text-dark)', margin:'0 0 2px', lineHeight:1.25, fontFamily:'Georgia,serif', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden' }}>{libro.titulo}</p>
+              <p style={{ fontSize:10, color:'var(--text-accent)', margin:0, fontFamily:'sans-serif' }}>{'★'.repeat(Math.floor(Number(libro.calificacion) || 0))}</p>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
   )
 }
 
