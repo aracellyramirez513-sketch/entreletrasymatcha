@@ -163,7 +163,7 @@ function DestacadoCard({ libro }) {
           style={{ width:140, height:200, objectFit:'cover', borderRadius:8, border:'1px solid var(--border-warm)' }}
           onError={e => { e.target.style.background='var(--bg-tag)'; e.target.src='' }} />
         <div>
-          <span style={{ display:'inline-block', background:'var(--btn-bg)', color:'#fff', fontSize:10, padding:'4px 12px', borderRadius:20, fontFamily:'sans-serif', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:10 }}>★ Destacado</span>
+          <span style={{ display:'inline-block', background:'var(--btn-bg)', color:'#fff', fontSize:10, padding:'4px 12px', borderRadius:20, fontFamily:'sans-serif', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:10 }}>★ Destacado del mes</span>
           <h2 style={{ fontSize:26, fontWeight:700, margin:'0 0 4px', color:'var(--text-dark)', lineHeight:1.2 }}>{libro.titulo}</h2>
           {libro.serie && <p style={{ fontSize:13, color:'#9b7b5e', margin:'0 0 4px', fontFamily:'sans-serif', fontStyle:'italic' }}>{libro.serie}{libro.numero_serie ? ` · Libro ${libro.numero_serie}` : ''}</p>}
           <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:8 }}>
