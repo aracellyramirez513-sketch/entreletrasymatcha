@@ -17,6 +17,16 @@ const statusColors = {
   'Completo': { color:'#3a6a7a', bg:'#e4f0f5', border:'#aacfda' },
 }
 
+// 🌌 Paleta lavanda para órdenes (conecta visualmente con los universos)
+const ordenColors = {
+  bg:     '#F0EDF5',      // fondo lavanda muy suave
+  border: '#C4BBD0',      // borde lavanda medio
+  accent: '#6B5B8C',      // acento morado suave (para borde izquierdo y textos)
+  accentDark: '#4A3F6B',  // morado más oscuro para títulos y contraste
+  pillBg: '#fff',         // fondo de los pills dentro de la card
+  tagBg:  '#E8E2F0',      // fondo de tropes
+}
+
 const catKeys = ['todo', 'resena', 'vineta', 'rincon', 'orden']
 const categories = ['Todo','Entre libros','Entre viñetas','Desde mi rincón','Órdenes de lectura']
 
@@ -308,32 +318,51 @@ function ItemCard({ item, activeTag, handleTag }) {
     )
   }
 
-  // Orden de lectura
+  // Orden de lectura — 🌌 estilo lavanda (conectado con universos)
   if (item.type === 'orden') {
     const tropes = Array.isArray(item.tropes) ? item.tropes : []
     return (
       <Link href={`/orden/${item.slug}`} style={{ textDecoration:'none' }}>
-        <div className="card-orden">
+        <div style={{
+          background: ordenColors.bg,
+          border: `1px solid ${ordenColors.border}`,
+          borderLeft: `4px solid ${ordenColors.accent}`,
+          borderRadius: 12,
+          cursor: 'pointer',
+          transition: 'opacity 0.15s'
+        }}
+        onMouseEnter={e => e.currentTarget.style.opacity='0.88'}
+        onMouseLeave={e => e.currentTarget.style.opacity='1'}>
           <div style={{ display:'grid', gridTemplateColumns:'80px 1fr', gap:14, padding:'1rem' }}>
             {item.portada_saga
-              ? <img src={item.portada_saga} alt={item.titulo} style={{ width:80, height:115, objectFit:'cover', borderRadius:6, border:'1px solid var(--border-warm)' }}
-                  onError={e => { e.target.style.background='var(--bg-tag)'; e.target.src='' }} />
-              : <div style={{ width:80, height:115, borderRadius:6, background:'var(--bg-tag)', border:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:24 }}>📚</div>
+              ? <img src={item.portada_saga} alt={item.titulo} style={{ width:80, height:115, objectFit:'cover', borderRadius:6, border:`1px solid ${ordenColors.border}` }}
+                  onError={e => { e.target.style.background=ordenColors.tagBg; e.target.src='' }} />
+              : <div style={{ width:80, height:115, borderRadius:6, background:ordenColors.tagBg, border:`1px solid ${ordenColors.border}`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:24 }}>📚</div>
             }
             <div>
               <div style={{ display:'flex', gap:6, flexWrap:'wrap', marginBottom:6 }}>
-                <Pill>{item.categoria}</Pill>
-                <Pill bg="#fff" color="var(--text-muted)" border="var(--border)">{item.num_libros} libros</Pill>
+                {item.categoria && (
+                  <span style={{ fontSize:11, padding:'2px 9px', borderRadius:20, fontFamily:'sans-serif', background:ordenColors.pillBg, color:ordenColors.accent, border:`1px solid ${ordenColors.border}` }}>
+                    {item.categoria}
+                  </span>
+                )}
+                <span style={{ fontSize:11, padding:'2px 9px', borderRadius:20, fontFamily:'sans-serif', background:ordenColors.pillBg, color:ordenColors.accent, border:`1px solid ${ordenColors.border}` }}>
+                  {item.num_libros} libros
+                </span>
               </div>
-              <h3 style={{ fontSize:16, fontWeight:700, margin:'0 0 2px', color:'var(--text-dark)' }}>{item.titulo}</h3>
-              <p style={{ fontSize:12, color:'#9b7b5e', margin:'0 0 4px', fontFamily:'sans-serif', fontStyle:'italic' }}>{item.autora}</p>
-              {item.pareja && <p style={{ fontSize:12, color:'var(--text-muted)', margin:'0 0 6px', fontFamily:'sans-serif' }}>💕 {item.pareja}</p>}
+              <h3 style={{ fontSize:16, fontWeight:700, margin:'0 0 2px', color:ordenColors.accentDark }}>{item.titulo}</h3>
+              <p style={{ fontSize:12, color:ordenColors.accent, margin:'0 0 4px', fontFamily:'sans-serif', fontStyle:'italic' }}>{item.autora || item.autor}</p>
+              {item.pareja && <p style={{ fontSize:12, color:ordenColors.accent, margin:'0 0 6px', fontFamily:'sans-serif', opacity:0.85 }}>💕 {item.pareja}</p>}
               <p style={{ fontSize:13, color:'var(--text-body)', lineHeight:1.6, margin:'0 0 8px', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden' }}>{item.descripcion}</p>
               <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
                 <div style={{ display:'flex', flexWrap:'wrap', gap:4 }}>
-                  {tropes.slice(0,3).map(t => <Pill key={t}>{t}</Pill>)}
+                  {tropes.slice(0,3).map(t => (
+                    <span key={t} style={{ fontSize:11, padding:'2px 9px', borderRadius:20, fontFamily:'sans-serif', background:ordenColors.tagBg, color:ordenColors.accent, border:`1px solid ${ordenColors.border}` }}>
+                      {t}
+                    </span>
+                  ))}
                 </div>
-                <span style={{ fontSize:12, color:'var(--text-accent)', fontFamily:'sans-serif', whiteSpace:'nowrap' }}>Ver orden →</span>
+                <span style={{ fontSize:12, color:ordenColors.accent, fontFamily:'sans-serif', whiteSpace:'nowrap', fontWeight:500 }}>Ver orden →</span>
               </div>
             </div>
           </div>
@@ -343,9 +372,9 @@ function ItemCard({ item, activeTag, handleTag }) {
               {item.imagenes_libros.slice(0,8).map((img, i) => (
                 <div key={i} style={{ flexShrink:0, position:'relative' }}>
                   <img src={img} alt={item.titulos_libros?.[i] || `Libro ${i+1}`}
-                    style={{ width:44, height:64, objectFit:'cover', borderRadius:4, border:'1px solid var(--border-warm)' }}
-                    onError={e => { e.target.style.background='var(--bg-tag)'; e.target.src='' }} />
-                  <span style={{ position:'absolute', top:2, left:2, background:'var(--btn-bg)', color:'#fff', fontSize:9, fontFamily:'sans-serif', borderRadius:3, padding:'1px 4px', fontWeight:700 }}>{i+1}</span>
+                    style={{ width:44, height:64, objectFit:'cover', borderRadius:4, border:`1px solid ${ordenColors.border}` }}
+                    onError={e => { e.target.style.background=ordenColors.tagBg; e.target.src='' }} />
+                  <span style={{ position:'absolute', top:2, left:2, background:ordenColors.accent, color:'#fff', fontSize:9, fontFamily:'sans-serif', borderRadius:3, padding:'1px 4px', fontWeight:700 }}>{i+1}</span>
                 </div>
               ))}
             </div>
