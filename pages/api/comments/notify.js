@@ -37,11 +37,12 @@ export default async function handler(req, res) {
   const slug = record.slug;
   const sitio = record.site === 'rwm' ? 'RWM' : 'ELYM';
   const esRespuesta = record.parent_id ? ' (respuesta)' : '';
+  const tipo = record.page_type || 'resena';
 
   const mensaje = [
     `💬 <b>Comentario nuevo en ${sitio}</b>${esRespuesta}`,
     ``,
-    `<b>${nombre}</b> escribió en <code>/${slug}</code>:`,
+    `<b>${nombre}</b> escribió en <code>/${tipo}/${slug}</code>:`,
     ``,
     `<i>${texto.slice(0, 500)}${texto.length > 500 ? '…' : ''}</i>`,
   ].join('\n');
@@ -61,8 +62,8 @@ export default async function handler(req, res) {
             inline_keyboard: [
               [
                 {
-                  text: '👀 Ver la reseña',
-                  url: `${SITE_URL}/resena/${slug}`,
+                  text: '👀 Ver la página',
+                  url: `${SITE_URL}/${tipo}/${slug}`,
                 },
               ],
             ],
