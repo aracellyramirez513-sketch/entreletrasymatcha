@@ -73,4 +73,13 @@ export default async function handler(req, res) {
 
     if (!tgRes.ok) {
       const detalle = await tgRes.text();
-      console.error('Telegram rechazó el
+      console.error('Telegram rechazó el mensaje:', detalle);
+      return res.status(502).json({ error: 'Telegram falló' });
+    }
+
+    return res.status(200).json({ ok: true });
+  } catch (err) {
+    console.error('Error enviando a Telegram:', err);
+    return res.status(500).json({ error: 'No se pudo notificar' });
+  }
+}
