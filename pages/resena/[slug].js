@@ -2,8 +2,9 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { getLibros, getLibro } from '../../lib/notion'
 import { Stars, Pill, SiteHeader, Newsletter, Footer } from '../../components/ui'
+import Comentarios from '../../components/Comentarios'
 
-export default function DetalleLibro({ libro }) {
+export default function DetalleLibro({ libro, slug }) {
   if (!libro) return <div className="container"><p>No encontrado</p></div>
 
   const tags = Array.isArray(libro.tags) ? libro.tags : (libro.tags||'').split(',').map(t=>t.trim()).filter(Boolean)
@@ -117,6 +118,9 @@ export default function DetalleLibro({ libro }) {
               </div>
             </div>
           )}
+
+          {/* Comentarios */}
+          <Comentarios slug={slug} />
         </div>
 
         <Newsletter />
@@ -137,5 +141,5 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   const libro = await getLibro(params.slug)
   if (!libro) return { notFound: true }
-  return { props: { libro }, revalidate: 60 }
+  return { props: { libro, slug: params.slug }, revalidate: 60 }
 }
