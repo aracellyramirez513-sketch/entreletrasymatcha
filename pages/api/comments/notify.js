@@ -16,10 +16,24 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
-  // Solo Supabase puede llamar a este endpoint
-  if (req.headers['x-webhook-secret'] !== WEBHOOK_SECRET) {
-    return res.status(401).json({ error: 'No autorizado' });
+  // ---------- DIAGNÓSTICO TEMPORAL ----------
+  const recibido = req.headers['x-webhook-secret'];
+
+  if (recibido !== WEBHOOK_SECRET) {
+    return res.status(401).json({
+      error: 'No autorizado',
+      debug: {
+        env_existe: typeof WEBHOOK_SECRET === 'string',
+        env_largo: WEBHOOK_SECRET ? WEBHOOK_SECRET.length : null,
+        header_existe: typeof recibido === 'string',
+        header_largo: recibido ? recibido.length : null,
+        headers_recibidos: Object.keys(req.headers),
+        telegram_token_existe: typeof TELEGRAM_TOKEN === 'string',
+        telegram_chat_existe: typeof TELEGRAM_CHAT_ID === 'string',
+      },
+    });
   }
+  // ---------- FIN DIAGNÓSTICO ----------
 
   if (!TELEGRAM_TOKEN || !TELEGRAM_CHAT_ID) {
     console.error('Faltan las variables de Telegram');
@@ -28,7 +42,6 @@ export default async function handler(req, res) {
 
   const { type, record } = req.body || {};
 
-  // Solo nos interesan los comentarios nuevos
   if (type !== 'INSERT' || !record) {
     return res.status(200).json({ ok: true, skipped: true });
   }
@@ -75,7 +88,7 @@ export default async function handler(req, res) {
     if (!tgRes.ok) {
       const detalle = await tgRes.text();
       console.error('Telegram rechazó el mensaje:', detalle);
-      return res.status(502).json({ error: 'Telegram falló' });
+      return res.status(502).json({ error: 'Telegram falló', detalle });
     }
 
     return res.status(200).json({ ok: true });
