@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { getTodo } from '../lib/notion'
 import { Stars, Pill, SiteHeader, Perfil, Sidebar, Newsletter, Footer } from '../components/ui'
 
@@ -36,10 +36,14 @@ const catConfig = [
   { key: 'orden',  label: 'Órdenes de lectura',   emoji: '📚', bg: '#F0EDF5', border: '#C4BBD0', color: '#6B5B8C', activeBg: '#6B5B8C' },
 ]
 
+// 📄 Cuántas entradas se muestran por página
+const PER_PAGE = 10
+
 export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
   const [activeCat, setActiveCat] = useState('todo')
   const [activeTag, setActiveTag] = useState(null)
   const [search, setSearch]       = useState('')
+  const [page, setPage]           = useState(1)
 
   const libroDestacado = useMemo(() => libros.find(l => l.destacado) || null, [libros])
   const librosFavoritos = useMemo(() => libros.filter(l => l.favorito).slice(0, 5), [libros])
@@ -73,6 +77,29 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
   }, [allItems, activeCat, activeTag, search])
 
   const isFiltered = activeCat !== 'todo' || activeTag || search
+
+  // 📄 Paginación
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE))
+
+  // Si cambian los filtros, volvemos a la página 1
+  useEffect(() => { setPage(1) }, [activeCat, activeTag, search])
+  // Si la página actual queda fuera de rango, la corregimos
+  useEffect(() => { if (page > totalPages) setPage(1) }, [page, totalPages])
+
+  const pageItems = useMemo(
+    () => filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE),
+    [filtered, page]
+  )
+
+  function goToPage(p) {
+    const next = Math.min(Math.max(1, p), totalPages)
+    setPage(next)
+    if (typeof window !== 'undefined') {
+      const anchor = document.getElementById('listado')
+      if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      else window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
 
   function handleTag(tag) { setActiveTag(prev => prev===tag ? null : tag) }
 
@@ -127,18 +154,25 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
             })}
           </div>
 
-          <div className="grid-sidebar">
+          <div className="grid-sidebar" id="listado">
             {/* Lista de contenido */}
             <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
               {filtered.length === 0
                 ? <p style={{ color:'var(--text-muted)', fontStyle:'italic', fontSize:14 }}>No hay entradas con ese filtro aún.</p>
-                : filtered.map((item, idx) => <ItemCard key={item.id||idx} item={item} activeTag={activeTag} handleTag={handleTag} />)
+                : pageItems.map((item, idx) => <ItemCard key={item.id||idx} item={item} activeTag={activeTag} handleTag={handleTag} />)
               }
+
+              {/* 📄 Paginador */}
+              {totalPages > 1 && (
+                <Paginador page={page} totalPages={totalPages} total={filtered.length} goToPage={goToPage} />
+              )}
             </div>
 
-            {/* Sidebar (ahora incluye el widget de Universos literarios adentro) */}
-            <Sidebar leyendo={leyendo} search={search} setSearch={setSearch}
-              activeTag={activeTag} allTags={allTags} handleTag={handleTag} />
+            {/* Sidebar sticky (ahora incluye el widget de Universos literarios adentro) */}
+            <div className="sidebar-sticky">
+              <Sidebar leyendo={leyendo} search={search} setSearch={setSearch}
+                activeTag={activeTag} allTags={allTags} handleTag={handleTag} />
+            </div>
           </div>
         </div>
 
@@ -386,6 +420,76 @@ function ItemCard({ item, activeTag, handleTag }) {
   }
 
   return null
+}
+
+// 📄 Paginador — botones ‹ 1 2 3 … ›
+function Paginador({ page, totalPages, total, goToPage }) {
+  const pages = useMemo(() => {
+    const out = []
+    const push = p => { if (!out.includes(p)) out.push(p) }
+    push(1)
+    for (let p = page - 1; p <= page + 1; p++) if (p > 1 && p < totalPages) push(p)
+    push(totalPages)
+    out.sort((a, b) => a - b)
+    // Insertamos "…" donde hay saltos
+    const withGaps = []
+    out.forEach((p, i) => {
+      if (i > 0 && p - out[i - 1] > 1) withGaps.push('…')
+      withGaps.push(p)
+    })
+    return withGaps
+  }, [page, totalPages])
+
+  const baseBtn = {
+    minWidth: 34,
+    height: 34,
+    padding: '0 10px',
+    borderRadius: 8,
+    fontSize: 13,
+    fontFamily: 'sans-serif',
+    border: '1px solid var(--border)',
+    background: 'transparent',
+    color: 'var(--text-body)',
+    cursor: 'pointer',
+    transition: 'all 0.15s'
+  }
+
+  return (
+    <div style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border)' }}>
+      <div style={{ display:'flex', justifyContent:'center', alignItems:'center', gap:6, flexWrap:'wrap' }}>
+        <button onClick={() => goToPage(page - 1)} disabled={page === 1}
+          style={{ ...baseBtn, opacity: page === 1 ? 0.35 : 1, cursor: page === 1 ? 'default' : 'pointer' }}>
+          ‹ Anterior
+        </button>
+
+        {pages.map((p, i) =>
+          p === '…'
+            ? <span key={`gap-${i}`} style={{ color:'var(--text-muted)', fontSize:13, padding:'0 4px', fontFamily:'sans-serif' }}>…</span>
+            : (
+              <button key={p} onClick={() => goToPage(p)}
+                style={{
+                  ...baseBtn,
+                  fontWeight: p === page ? 700 : 400,
+                  background: p === page ? 'var(--btn-bg)' : 'transparent',
+                  color: p === page ? '#fff' : 'var(--text-body)',
+                  borderColor: p === page ? 'var(--btn-bg)' : 'var(--border)'
+                }}>
+                {p}
+              </button>
+            )
+        )}
+
+        <button onClick={() => goToPage(page + 1)} disabled={page === totalPages}
+          style={{ ...baseBtn, opacity: page === totalPages ? 0.35 : 1, cursor: page === totalPages ? 'default' : 'pointer' }}>
+          Siguiente ›
+        </button>
+      </div>
+
+      <p style={{ textAlign:'center', fontSize:12, color:'var(--text-muted)', fontFamily:'sans-serif', margin:'10px 0 0' }}>
+        Página {page} de {totalPages} · {total} {total === 1 ? 'entrada' : 'entradas'} en total
+      </p>
+    </div>
+  )
 }
 
 export async function getStaticProps() {
