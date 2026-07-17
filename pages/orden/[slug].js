@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { getOrdenes, getOrden } from '../../lib/notion'
 import { Pill, SiteHeader, Newsletter, Footer } from '../../components/ui'
+import Comentarios from '../../components/Comentarios'
 
 const tipoOrdenInfo = {
   'Orden estricto':             { color: '#712B13', bg: '#FAECE7', border: '#F0997B', desc: 'Leer estrictamente en este orden — los libros se conectan directamente.' },
@@ -17,7 +18,7 @@ const estadoInfo = {
   'Abandonada':{ color: '#791F1F', bg: '#FCEBEB', border: '#F09595' },
 }
 
-export default function DetalleOrden({ orden }) {
+export default function DetalleOrden({ orden, slug }) {
   if (!orden) return <div className="container"><p>No encontrado</p></div>
 
   const tropes = Array.isArray(orden.tropes) ? orden.tropes : []
@@ -121,6 +122,9 @@ export default function DetalleOrden({ orden }) {
               Los libros de esta serie aún están siendo añadidos.
             </div>
           )}
+
+          {/* Comentarios */}
+          <Comentarios slug={slug} pageType="orden" />
         </div>
 
         <Newsletter />
@@ -226,5 +230,5 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   const orden = await getOrden(params.slug)
   if (!orden) return { notFound: true }
-  return { props: { orden }, revalidate: 60 }
+  return { props: { orden, slug: params.slug }, revalidate: 60 }
 }
