@@ -151,7 +151,7 @@ function Comment({ comment, onReply, depth = 0 }) {
   );
 }
 
-export default function Comentarios({ slug }) {
+export default function Comentarios({ slug, pageType = 'resena' }) {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState('');
@@ -164,7 +164,9 @@ export default function Comentarios({ slug }) {
   const load = useCallback(async () => {
     if (!slug) return;
     try {
-      const res = await fetch(`/api/comments?slug=${encodeURIComponent(slug)}`);
+      const res = await fetch(
+        `/api/comments?slug=${encodeURIComponent(slug)}&page_type=${encodeURIComponent(pageType)}`
+      );
       const data = await res.json();
       setComments(data.comments || []);
     } catch {
@@ -172,7 +174,7 @@ export default function Comentarios({ slug }) {
     } finally {
       setLoading(false);
     }
-  }, [slug]);
+  }, [slug, pageType]);
 
   useEffect(() => {
     load();
@@ -194,6 +196,7 @@ export default function Comentarios({ slug }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           slug,
+          page_type: pageType,
           author_name: name,
           content,
           parent_id: replyTo?.id || null,
