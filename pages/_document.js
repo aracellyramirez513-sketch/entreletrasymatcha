@@ -6,7 +6,7 @@ export default function Document() {
       <Head>
         <meta charSet="UTF-8" />
         <meta name="p:domain_verify" content="02cc9444537bac94f8f46261543536c9" />
-        <meta name="description" content="Un espacio donde comparto lo que leo con honestidad: reseñas de romance, dark romance, romantasy y más. Siempre con un matcha cerca." />
+        <meta name="description" content="Un espacio donde comparto lo que leo: reseñas de romance, dark romance, romantasy y más. Siempre con un matcha cerca." />
         <meta property="og:site_name" content="Entre letras y matcha" />
         <meta name="theme-color" content="#faf8f4" />
         <link rel="icon" href="/favicon.ico" />
