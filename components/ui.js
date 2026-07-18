@@ -186,7 +186,7 @@ export function Sidebar({ leyendo, search, setSearch, activeTag, allTags, handle
                 style={{ textAlign:'left', padding:'6px 10px', borderRadius:8, fontSize:13,
                   border:`1px solid ${activeTag===tag ? 'var(--btn-bg)' : 'var(--border)'}`,
                   background: activeTag===tag ? 'var(--btn-bg)' : 'transparent',
-                  color: activeTag===tag ? '#fff' : 'var(--text-body)', cursor:'pointer', fontFamily:'sans-serif' }}>
+                  color: activeTag===tag ? '#fff' : 'var(--text-tag)', cursor:'pointer', fontFamily:'sans-serif' }}>
                 {tag}
               </button>
             ))}
