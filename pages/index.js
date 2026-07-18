@@ -204,7 +204,7 @@ function DestacadoCard({ libro }) {
           {libro.serie && <p style={{ fontSize:13, color:'#9b7b5e', margin:'0 0 4px', fontFamily:'sans-serif', fontStyle:'italic' }}>{libro.serie}{libro.numero_serie ? ` · Libro ${libro.numero_serie}` : ''}</p>}
           <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:8 }}>
             <p style={{ fontSize:14, color:'var(--text-muted)', margin:0, fontFamily:'sans-serif' }}>{libro.autor}</p>
-            <Pill>{libro.categoria}</Pill>
+            <Pill cat>{libro.categoria}</Pill>
           </div>
           <Stars n={libro.calificacion} size={16} />
           <p style={{ fontSize:14, color:'var(--text-body)', lineHeight:1.65, margin:'10px 0 12px', display:'-webkit-box', WebkitLineClamp:3, WebkitBoxOrient:'vertical', overflow:'hidden' }}>{libro.sinopsis}</p>
@@ -241,7 +241,9 @@ function FavoritosRow({ libros }) {
 function ItemCard({ item, activeTag, handleTag }) {
   // Libro
   if (item.type === 'resena') {
-    const tags = Array.isArray(item.tags) ? item.tags : (item.tags||'').split(',').map(t=>t.trim()).filter(Boolean)
+    const cat = String(item.categoria || '').trim().toLowerCase()
+    const tags = (Array.isArray(item.tags) ? item.tags : (item.tags||'').split(',').map(t=>t.trim()).filter(Boolean))
+      .filter(t => t.trim().toLowerCase() !== cat)
     return (
       <Link href={`/resena/${item.slug}`} style={{ textDecoration:'none' }}>
         <div className="card" style={{ display:'grid', gridTemplateColumns:'80px 1fr', gap:14 }}>
@@ -253,7 +255,7 @@ function ItemCard({ item, activeTag, handleTag }) {
             {item.serie && <p style={{ fontSize:11, color:'#9b7b5e', margin:'0 0 2px', fontFamily:'sans-serif', fontStyle:'italic' }}>{item.serie}{item.numero_serie ? ` · Libro ${item.numero_serie}` : ''}</p>}
             <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:6 }}>
               <p style={{ fontSize:12, color:'var(--text-muted)', margin:0, fontFamily:'sans-serif' }}>{item.autor}</p>
-              <Pill>{item.categoria}</Pill>
+              <Pill cat>{item.categoria}</Pill>
             </div>
             <Stars n={item.calificacion} />
             <p style={{ fontSize:13, color:'var(--text-body)', lineHeight:1.6, margin:'7px 0 10px', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden' }}>{item.sinopsis}</p>
@@ -262,8 +264,9 @@ function ItemCard({ item, activeTag, handleTag }) {
                 {tags.map(tag => (
                   <span key={tag} onClick={e => { e.preventDefault(); handleTag(tag) }}
                     style={{ fontSize:11, padding:'2px 9px', borderRadius:20, fontFamily:'sans-serif', cursor:'pointer',
-                      border:`1px solid var(--border)`, background: activeTag===tag ? 'var(--btn-bg)' : 'var(--bg-tag)',
-                      color: activeTag===tag ? '#fff' : 'var(--text-accent)' }}>
+                      border:`1px solid ${activeTag===tag ? 'var(--btn-bg)' : 'var(--border-tag)'}`,
+                      background: activeTag===tag ? 'var(--btn-bg)' : 'transparent',
+                      color: activeTag===tag ? '#fff' : 'var(--text-tag)' }}>
                     {tag}
                   </span>
                 ))}
