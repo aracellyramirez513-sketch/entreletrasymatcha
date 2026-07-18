@@ -30,17 +30,32 @@ const ordenColors = {
 // 🎨 Configuración de pills de filtro con emoji + color personalizado
 const catConfig = [
   { key: 'todo',   label: 'Todo',                 emoji: '✨', bg: '#e8ede3', border: '#b0c8a0', color: '#5a7a50', activeBg: '#5a7a50' },
-  { key: 'resena', label: 'Entre libros',         emoji: '📖', bg: '#e8ede3', border: '#b0c8a0', color: '#5a7a50', activeBg: '#5a7a50' },
-  { key: 'vineta', label: 'Entre viñetas',        emoji: '🎨', bg: '#e4f0f5', border: '#aacfda', color: '#3a6a7a', activeBg: '#3a6a7a' },
+  { key: 'resena', label: 'Libros',               emoji: '📖', bg: '#e8ede3', border: '#b0c8a0', color: '#5a7a50', activeBg: '#5a7a50' },
+  { key: 'vineta', label: 'Viñetas',              emoji: '🎨', bg: '#e4f0f5', border: '#aacfda', color: '#3a6a7a', activeBg: '#3a6a7a' },
   { key: 'rincon', label: 'Desde mi rincón',      emoji: '🌿', bg: '#f5ede4', border: '#d4bfaa', color: '#7a6a50', activeBg: '#7a6a50' },
   { key: 'orden',  label: 'Órdenes de lectura',   emoji: '📚', bg: '#F0EDF5', border: '#C4BBD0', color: '#6B5B8C', activeBg: '#6B5B8C' },
 ]
+
+// 🏷️ Colores por subgénero para la fila de filtros de categoría
+// (mismos tonos que usan los pills de categoría en las tarjetas)
+const catFilterColors = {
+  'dark romance':          { bg: '#e7d0d6', color: '#67323f' },
+  'romantasy':             { bg: '#e0d0e7', color: '#573267' },
+  'mafia romance':         { bg: '#e7d9d0', color: '#674832' },
+  'mafia':                 { bg: '#e7d9d0', color: '#674832' },
+  'romance contemporáneo': { bg: '#d0e7d3', color: '#326739' },
+  'romance contemporaneo': { bg: '#d0e7d3', color: '#326739' },
+  'monstruos':             { bg: '#d0e2e7', color: '#325b67' },
+  'aliens':                { bg: '#d0e2e7', color: '#325b67' },
+}
+const catFilterFallback = { bg: '#eae4d8', color: '#6b5b45' }
 
 // 📄 Cuántas entradas se muestran por página
 const PER_PAGE = 10
 
 export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
   const [activeCat, setActiveCat] = useState('todo')
+  const [activeCategoria, setActiveCategoria] = useState(null)
   const [activeTag, setActiveTag] = useState(null)
   const [search, setSearch]       = useState('')
   const [page, setPage]           = useState(1)
@@ -59,8 +74,24 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
     return Array.from(set).sort()
   }, [allItems])
 
+  // 🏷️ Subgéneros disponibles, tomados del campo "categoria" de los libros/órdenes
+  const allCategorias = useMemo(() => {
+    const map = new Map()
+    allItems.forEach(item => {
+      const c = String(item.categoria || '').trim()
+      if (c) {
+        const key = c.toLowerCase()
+        if (!map.has(key)) map.set(key, c)
+      }
+    })
+    return Array.from(map.entries())
+      .map(([key, label]) => ({ key, label }))
+      .sort((a, b) => a.label.localeCompare(b.label))
+  }, [allItems])
+
   const filtered = useMemo(() => {
     let items = activeCat === 'todo' ? allItems : allItems.filter(i => i.type === activeCat || (activeCat==='orden' && i.type==='orden'))
+    if (activeCategoria) items = items.filter(i => String(i.categoria || '').trim().toLowerCase() === activeCategoria)
     if (activeTag) items = items.filter(i => {
       const tags = Array.isArray(i.tags) ? i.tags : (i.tags||'').split(',').map(t=>t.trim())
       return tags.includes(activeTag)
@@ -74,15 +105,15 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
       )
     }
     return items
-  }, [allItems, activeCat, activeTag, search])
+  }, [allItems, activeCat, activeCategoria, activeTag, search])
 
-  const isFiltered = activeCat !== 'todo' || activeTag || search
+  const isFiltered = activeCat !== 'todo' || activeCategoria || activeTag || search
 
   // 📄 Paginación
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE))
 
   // Si cambian los filtros, volvemos a la página 1
-  useEffect(() => { setPage(1) }, [activeCat, activeTag, search])
+  useEffect(() => { setPage(1) }, [activeCat, activeCategoria, activeTag, search])
   // Si la página actual queda fuera de rango, la corregimos
   useEffect(() => { if (page > totalPages) setPage(1) }, [page, totalPages])
 
@@ -125,8 +156,8 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
         )}
 
         <div style={{ padding:'1.5rem 0 1rem' }}>
-          {/* Filtros de categoría con emojis y colores propios */}
-          <div style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:'1.5rem' }}>
+          {/* Filtros de tipo con emojis y colores propios */}
+          <div style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:'0.75rem' }}>
             {catConfig.map(cat => {
               const isActive = activeCat === cat.key
               return (
@@ -153,6 +184,50 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
               )
             })}
           </div>
+
+          {/* 🏷️ Filtros por subgénero (se suman a los de arriba) */}
+          {allCategorias.length > 0 && (
+            <div style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:'1.5rem' }}>
+              <button
+                onClick={() => setActiveCategoria(null)}
+                style={{
+                  padding:'6px 14px',
+                  borderRadius:20,
+                  fontSize:13,
+                  fontFamily:'sans-serif',
+                  fontWeight:500,
+                  border:'1px solid #d9cfbf',
+                  background: activeCategoria === null ? '#7A9E7E' : '#f0ece3',
+                  color: activeCategoria === null ? '#fff' : '#7a6a50',
+                  cursor:'pointer',
+                  transition:'all 0.15s'
+                }}>
+                Todas
+              </button>
+              {allCategorias.map(c => {
+                const col = catFilterColors[c.key] || catFilterFallback
+                const isActive = activeCategoria === c.key
+                return (
+                  <button key={c.key}
+                    onClick={() => setActiveCategoria(prev => prev === c.key ? null : c.key)}
+                    style={{
+                      padding:'6px 14px',
+                      borderRadius:20,
+                      fontSize:13,
+                      fontFamily:'sans-serif',
+                      fontWeight:500,
+                      border: `1px solid ${isActive ? col.color : 'transparent'}`,
+                      background: isActive ? col.color : col.bg,
+                      color: isActive ? '#fff' : col.color,
+                      cursor:'pointer',
+                      transition:'all 0.15s'
+                    }}>
+                    {c.label}
+                  </button>
+                )
+              })}
+            </div>
+          )}
 
           <div className="grid-sidebar" id="listado">
             {/* Lista de contenido */}
