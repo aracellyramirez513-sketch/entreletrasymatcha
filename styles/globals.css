@@ -1,16 +1,16 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg:          #faf8f4;
-  --bg-card:     #faf8f4;
+  --bg:          #fcfcfa;
+  --bg-card:     #fcfcfa;
   --bg-dark:     #2a3028;
-  --bg-tag:      #f2ede9;
+  --bg-tag:      #f5f3ef;
   --bg-tag-dark: #d4dece;
-  --bg-sidebar:  #faf8f4;
+  --bg-sidebar:  #fcfcfa;
 
-  /* Bordes — antes todo era #cdd8c0 */
-  --border:        #b79fac;
-  --border-strong: #6b5261;
-  --border-tag:    #c49e9e;
+  /* Bordes — familia lila */
+  --border:        #aa83b4;
+  --border-strong: #5d3b66;
+  --border-tag:    #bca2c3;
   --border-btn:    #cdd8c0;
   --border-warm:   #c8bfaa;
 
@@ -18,8 +18,8 @@
   --text-body:   #4a5645;
   --text-muted:  #7a8f72;
   --text-accent: #5a7a50;
-  --text-tag:    #4a3644;
-  --text-author: #364a36;
+  --text-tag:    #4c3054;
+  --text-author: #305435;
   --text-light:  #e8ede3;
   --text-lighter:#a8c49a;
 
@@ -114,7 +114,7 @@ img { display: block; max-width: 100%; }
 .afiliados-banner {
   margin: 2rem 0;
   padding: 1.25rem 1.5rem;
-  background: #f5f1ec;
+  background: #f7f6f3;
   border: 1px dashed var(--border-btn);
   border-radius: 10px;
   text-align: center;
