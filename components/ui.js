@@ -162,7 +162,7 @@ export function Sidebar({ leyendo, search, setSearch, activeTag, allTags, handle
                   onError={e => { e.target.style.background='var(--bg-tag)'; e.target.src='' }} />
                 <div>
                   <p style={{ fontSize:12, fontWeight:700, color:'var(--text-dark)', margin:'0 0 2px', lineHeight:1.3, fontFamily:'Georgia,serif' }}>{libro.titulo}</p>
-                  <p style={{ fontSize:11, color:'var(--text-muted)', margin:0, fontFamily:'sans-serif' }}>{libro.autor}</p>
+                  <p style={{ fontSize:11, color:'var(--text-author)', margin:0, fontFamily:'sans-serif' }}>{libro.autor}</p>
                 </div>
               </div>
             ))}
