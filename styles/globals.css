@@ -1,11 +1,11 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --bg:          #faf8f4;
-  --bg-card:     #f6f0ee;
+  --bg-card:     #faf8f4;
   --bg-dark:     #2a3028;
-  --bg-tag:      #efe6e5;
+  --bg-tag:      #f2ede9;
   --bg-tag-dark: #d4dece;
-  --bg-sidebar:  #f5f0ef;
+  --bg-sidebar:  #faf8f4;
 
   /* Bordes — antes todo era #cdd8c0 */
   --border:        #b79fac;
@@ -113,7 +113,7 @@ img { display: block; max-width: 100%; }
 .afiliados-banner {
   margin: 2rem 0;
   padding: 1.25rem 1.5rem;
-  background: #f2ebea;
+  background: #f5f1ec;
   border: 1px dashed var(--border-btn);
   border-radius: 10px;
   text-align: center;
