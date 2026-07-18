@@ -1,5 +1,4 @@
 import { Html, Head, Main, NextScript } from 'next/document'
-
 export default function Document() {
   return (
     <Html lang="es">
@@ -10,6 +9,10 @@ export default function Document() {
         <meta property="og:site_name" content="Entre letras y matcha" />
         <meta name="theme-color" content="#faf8f4" />
         <link rel="icon" href="/favicon.ico" />
+        {/* Fuentes — Fraunces para el título */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&display=swap" rel="stylesheet" />
         {/* Google Analytics */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-TSDVKXMFTQ" />
         <script dangerouslySetInnerHTML={{__html:`
