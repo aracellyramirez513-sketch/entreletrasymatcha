@@ -16,12 +16,25 @@ export function Stars({ n, size = 13 }) {
 }
 
 // ─── Pill ────────────────────────────────────────────────────────────────────
-export function Pill({ children, bg, color, border }) {
+// Un color por subgénero. La llave es la categoría de Notion en minúscula.
+const CAT_COLORS = {
+  'dark romance':          { bg: '#e7d0d6', color: '#67323f' },
+  'romantasy':             { bg: '#e0d0e7', color: '#573267' },
+  'mafia romance':         { bg: '#e7d9d0', color: '#674832' },
+  'mafia':                 { bg: '#e7d9d0', color: '#674832' },
+  'romance contemporáneo': { bg: '#d0e7d3', color: '#326739' },
+  'romance contemporaneo': { bg: '#d0e7d3', color: '#326739' },
+  'monstruos':             { bg: '#d0e2e7', color: '#325b67' },
+  'aliens':                { bg: '#d0e2e7', color: '#325b67' },
+}
+
+export function Pill({ children, bg, color, border, cat }) {
+  const c = cat ? CAT_COLORS[String(children ?? '').trim().toLowerCase()] : null
   return (
     <span style={{
-      background: bg || 'var(--bg-tag)',
-      color: color || 'var(--text-accent)',
-      border: `1px solid ${border || 'var(--border)'}`,
+      background: bg || (c ? c.bg : 'var(--bg-tag)'),
+      color: color || (c ? c.color : 'var(--text-accent)'),
+      border: `1px solid ${border || (c ? 'transparent' : 'var(--border-tag)')}`,
       fontSize: 11, padding: '2px 10px',
       borderRadius: 20, fontFamily: 'sans-serif',
       whiteSpace: 'nowrap', display: 'inline-block',
