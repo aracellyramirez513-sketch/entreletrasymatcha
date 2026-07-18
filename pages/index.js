@@ -203,7 +203,7 @@ function DestacadoCard({ libro }) {
           <h2 style={{ fontSize:26, fontWeight:700, margin:'0 0 4px', color:'var(--text-dark)', lineHeight:1.2 }}>{libro.titulo}</h2>
           {libro.serie && <p style={{ fontSize:13, color:'#9b7b5e', margin:'0 0 4px', fontFamily:'sans-serif', fontStyle:'italic' }}>{libro.serie}{libro.numero_serie ? ` · Libro ${libro.numero_serie}` : ''}</p>}
           <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:8 }}>
-            <p style={{ fontSize:14, color:'var(--text-muted)', margin:0, fontFamily:'sans-serif' }}>{libro.autor}</p>
+            <p style={{ fontSize:14, color:'var(--text-author)', margin:0, fontFamily:'sans-serif', fontWeight:500 }}>{libro.autor}</p>
             <Pill cat>{libro.categoria}</Pill>
           </div>
           <Stars n={libro.calificacion} size={16} />
@@ -254,7 +254,7 @@ function ItemCard({ item, activeTag, handleTag }) {
             <h3 style={{ fontSize:16, fontWeight:700, margin:'0 0 2px', color:'var(--text-dark)' }}>{item.titulo}</h3>
             {item.serie && <p style={{ fontSize:11, color:'#9b7b5e', margin:'0 0 2px', fontFamily:'sans-serif', fontStyle:'italic' }}>{item.serie}{item.numero_serie ? ` · Libro ${item.numero_serie}` : ''}</p>}
             <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:6 }}>
-              <p style={{ fontSize:12, color:'var(--text-muted)', margin:0, fontFamily:'sans-serif' }}>{item.autor}</p>
+              <p style={{ fontSize:12, color:'var(--text-author)', margin:0, fontFamily:'sans-serif', fontWeight:500 }}>{item.autor}</p>
               <Pill cat>{item.categoria}</Pill>
             </div>
             <Stars n={item.calificacion} />
