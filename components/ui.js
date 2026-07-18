@@ -131,19 +131,19 @@ export function Sidebar({ leyendo, search, setSearch, activeTag, allTags, handle
         <p style={{ fontSize:11, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--text-muted)', margin:'0 0 0.75rem', fontFamily:'sans-serif' }}>🌌 Universos literarios</p>
         <Link href="/universos-literarios" style={{ textDecoration:'none' }}>
           <div style={{
-            background:'#EEEDFE',
-            border:'1px solid #AFA9EC',
+            background:'#e6efe7',
+            border:'1px solid #8fb996',
             borderRadius:10,
             padding:'0.75rem',
             cursor:'pointer',
             transition:'transform 0.15s, box-shadow 0.15s'
           }}
-          onMouseEnter={e => { e.currentTarget.style.transform='translateY(-1px)'; e.currentTarget.style.boxShadow='0 3px 10px rgba(60, 52, 137, 0.12)' }}
+          onMouseEnter={e => { e.currentTarget.style.transform='translateY(-1px)'; e.currentTarget.style.boxShadow='0 3px 10px rgba(48, 84, 53, 0.14)' }}
           onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='none' }}>
-            <p style={{ fontSize:12, color:'#26215C', lineHeight:1.5, margin:'0 0 8px' }}>
+            <p style={{ fontSize:12, color:'#2c4430', lineHeight:1.5, margin:'0 0 8px' }}>
               Explora los mundos donde las series se conectan entre sí.
             </p>
-            <span style={{ fontSize:11, color:'#3C3489', fontFamily:'sans-serif', fontWeight:600 }}>
+            <span style={{ fontSize:11, color:'#305435', fontFamily:'sans-serif', fontWeight:600 }}>
               Ver todos →
             </span>
           </div>
