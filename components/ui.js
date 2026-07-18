@@ -85,18 +85,10 @@ export function SiteHeader() {
         Lecturas · Matcha · Recomendaciones
       </p>
       <Link href="/">
-        <h1 style={{ fontSize:'clamp(32px,6vw,48px)', fontWeight:700, margin:'0 0 1rem', lineHeight:1.2, color:'var(--text-dark)', whiteSpace:'nowrap', cursor:'pointer' }}>
+        <h1 style={{ fontFamily:"'Fraunces', serif", fontSize:'clamp(32px,6vw,48px)', fontWeight:700, margin:'0', lineHeight:1.2, color:'var(--text-dark)', whiteSpace:'nowrap', cursor:'pointer' }}>
           Entre letras <span style={{ color:'var(--text-accent)' }}>y matcha</span>
         </h1>
       </Link>
-      <p style={{ fontSize:17, color:'var(--text-body)', maxWidth:480, margin:'0 auto 1.5rem', lineHeight:1.75, fontStyle:'italic' }}>
-        Un espacio personal donde comparto lo que me gusta, lo que me mueve y lo que recomendaría sin dudarlo.
-      </p>
-      <div style={{ display:'flex', gap:8, justifyContent:'center', flexWrap:'wrap' }}>
-        {['Entre libros','Entre viñetas','Desde mi rincón','Órdenes de lectura'].map(t => (
-          <span key={t} style={{ background:'var(--bg-tag)', color:'var(--text-accent)', fontSize:12, padding:'4px 14px', borderRadius:20, fontFamily:'sans-serif', border:'1px solid var(--border)' }}>{t}</span>
-        ))}
-      </div>
     </div>
   )
 }
