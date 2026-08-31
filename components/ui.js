@@ -98,7 +98,7 @@ export function Perfil() {
   return (
     <div className="perfil-grid">
       <div style={{ width:120, height:120, borderRadius:'50%', border:'2px solid var(--border)', overflow:'hidden', flexShrink:0 }}>
-        <img src="https://i.ibb.co/ZRRXh2xZ/Imagen.jpg" alt="Ari" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
+        <img src="https://i.ibb.co/QvhccK27/IMG-4876.jpg" alt="Ari" style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'50% 8%' }} />
       </div>
       <div>
         <h2 style={{ fontSize:20, fontWeight:700, margin:'0 0 0.5rem', color:'var(--text-dark)' }}>Hola, soy Ari</h2>
