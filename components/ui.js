@@ -97,7 +97,7 @@ export function SiteHeader() {
 export function Perfil() {
   return (
     <div className="perfil-grid">
-      <div style={{ width:120, height:120, borderRadius:'50%', border:'2px solid var(--border)', overflow:'hidden', flexShrink:0 }}>
+      <div style={{ width:120, height:120, borderRadius:'50%', border:'4px solid #2e3352', outline:'2px solid #c9a84c', outlineOffset:2, overflow:'hidden', flexShrink:0 }}>
         <img src="https://i.ibb.co/QvhccK27/IMG-4876.jpg" alt="Ari" style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'50% 8%' }} />
       </div>
       <div>
