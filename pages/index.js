@@ -33,7 +33,7 @@ const catConfig = [
   { key: 'resena', label: 'Libros',               emoji: '📖', bg: '#e8ede3', border: '#b0c8a0', color: '#5a7a50', activeBg: '#5a7a50' },
   { key: 'vineta', label: 'Viñetas',              emoji: '🎨', bg: '#e4f0f5', border: '#aacfda', color: '#3a6a7a', activeBg: '#3a6a7a' },
   { key: 'rincon', label: 'Desde mi rincón',      emoji: '🌿', bg: '#f5ede4', border: '#d4bfaa', color: '#7a6a50', activeBg: '#7a6a50' },
-  { key: 'orden',  label: 'Órdenes de lectura',   emoji: '📚', bg: '#F0EDF5', border: '#C4BBD0', color: '#6B5B8C', activeBg: '#6B5B8C' },
+  { key: 'orden',  label: 'Órdenes de lectura',   emoji: '📚', bg: '#eaeef5', border: '#a8b6d1', color: '#3f4d73', activeBg: '#3f4d73' },
 ]
 
 // 🏷️ Colores por subgénero para la fila de filtros de categoría
@@ -61,7 +61,7 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
   const [page, setPage]           = useState(1)
 
   const libroDestacado = useMemo(() => libros.find(l => l.destacado) || null, [libros])
-  const librosFavoritos = useMemo(() => libros.filter(l => l.favorito).slice(0, 5), [libros])
+  const librosFavoritos = useMemo(() => libros.filter(l => l.favorito).slice(0, 20), [libros])
 
   const allItems = useMemo(() => { const items = [...libros, ...vinetas, ...rincon, ...ordenes]; return items.sort((a, b) => (b.fecha || "").localeCompare(a.fecha || "")); }, [libros, vinetas, rincon, ordenes])
 
@@ -157,7 +157,7 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
 
         <div style={{ padding:'1.5rem 0 1rem' }}>
           {/* Filtros de tipo con emojis y colores propios */}
-          <div style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:'0.75rem' }}>
+          <div style={{ display:'flex', gap:9, flexWrap:'wrap', marginBottom:'0.75rem' }}>
             {catConfig.map(cat => {
               const isActive = activeCat === cat.key
               return (
@@ -166,10 +166,10 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
                   style={{
                     display:'inline-flex',
                     alignItems:'center',
-                    gap:6,
-                    padding:'6px 14px',
-                    borderRadius:20,
-                    fontSize:13,
+                    gap:7,
+                    padding:'8px 17px',
+                    borderRadius:22,
+                    fontSize:14,
                     fontFamily:'sans-serif',
                     fontWeight:500,
                     border: `1px solid ${cat.border}`,
@@ -178,7 +178,7 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
                     cursor:'pointer',
                     transition:'all 0.15s'
                   }}>
-                  <span style={{ fontSize:14 }}>{cat.emoji}</span>
+                  <span style={{ fontSize:15 }}>{cat.emoji}</span>
                   <span>{cat.label}</span>
                 </button>
               )
@@ -267,23 +267,23 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
 function DestacadoCard({ libro }) {
   return (
     <Link href={`/resena/${libro.slug}`} style={{ textDecoration:'none' }}>
-      <div style={{ margin:'2rem 0 1rem', background:'var(--bg-sidebar)', border:'1px solid var(--border)', borderRadius:16, padding:'1.5rem', display:'grid', gridTemplateColumns:'140px 1fr', gap:20, cursor:'pointer', transition:'opacity 0.15s' }}
+      <div className="destacado-compacto" style={{ margin:'1.5rem 0 1rem', background:'var(--bg-sidebar)', border:'1px solid var(--border)', borderRadius:12, padding:'1rem', display:'grid', gridTemplateColumns:'90px 1fr', gap:14, cursor:'pointer', transition:'opacity 0.15s' }}
         onMouseEnter={e => e.currentTarget.style.opacity='0.92'}
         onMouseLeave={e => e.currentTarget.style.opacity='1'}>
         <img src={libro.portada} alt={libro.titulo}
-          style={{ width:140, height:200, objectFit:'cover', borderRadius:8, border:'1px solid var(--border-warm)' }}
+          style={{ width:90, height:135, objectFit:'cover', borderRadius:6, border:'1px solid var(--border-warm)' }}
           onError={e => { e.target.style.background='var(--bg-tag)'; e.target.src='' }} />
         <div>
-          <span style={{ display:'inline-block', background:'var(--btn-bg)', color:'#fff', fontSize:10, padding:'4px 12px', borderRadius:20, fontFamily:'sans-serif', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:10 }}>★ Destacado del mes</span>
-          <h2 style={{ fontSize:26, fontWeight:700, margin:'0 0 4px', color:'var(--text-dark)', lineHeight:1.2 }}>{libro.titulo}</h2>
-          {libro.serie && <p style={{ fontSize:13, color:'#9b7b5e', margin:'0 0 4px', fontFamily:'sans-serif', fontStyle:'italic' }}>{libro.serie}{libro.numero_serie ? ` · Libro ${libro.numero_serie}` : ''}</p>}
-          <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:8 }}>
-            <p style={{ fontSize:14, color:'var(--text-author)', margin:0, fontFamily:'sans-serif', fontWeight:500 }}>{libro.autor}</p>
+          <span style={{ display:'inline-block', background:'var(--btn-bg)', color:'#fff', fontSize:9, padding:'3px 10px', borderRadius:20, fontFamily:'sans-serif', letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:8 }}>★ Destacado del mes</span>
+          <h2 style={{ fontSize:19, fontWeight:700, margin:'0 0 3px', color:'var(--text-dark)', lineHeight:1.2 }}>{libro.titulo}</h2>
+          {libro.serie && <p style={{ fontSize:12, color:'#9b7b5e', margin:'0 0 3px', fontFamily:'sans-serif', fontStyle:'italic' }}>{libro.serie}{libro.numero_serie ? ` · Libro ${libro.numero_serie}` : ''}</p>}
+          <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:6, flexWrap:'wrap' }}>
+            <p style={{ fontSize:13, color:'var(--text-author)', margin:0, fontFamily:'sans-serif', fontWeight:500 }}>{libro.autor}</p>
             <Pill cat>{libro.categoria}</Pill>
           </div>
-          <Stars n={libro.calificacion} size={16} />
-          <p style={{ fontSize:14, color:'var(--text-body)', lineHeight:1.65, margin:'10px 0 12px', display:'-webkit-box', WebkitLineClamp:3, WebkitBoxOrient:'vertical', overflow:'hidden' }}>{libro.sinopsis}</p>
-          <span style={{ fontSize:13, color:'var(--text-accent)', fontFamily:'sans-serif', fontWeight:500 }}>Leer la reseña completa →</span>
+          <Stars n={libro.calificacion} size={14} />
+          <p style={{ fontSize:13, color:'var(--text-body)', lineHeight:1.6, margin:'8px 0 10px', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden' }}>{libro.sinopsis}</p>
+          <span style={{ fontSize:12, color:'var(--text-accent)', fontFamily:'sans-serif', fontWeight:500 }}>Leer la reseña completa →</span>
         </div>
       </div>
     </Link>
@@ -291,23 +291,27 @@ function DestacadoCard({ libro }) {
 }
 
 function FavoritosRow({ libros }) {
+  const Cover = ({ libro, dup }) => (
+    <Link key={(dup ? 'd-' : '') + libro.id} href={`/resena/${libro.slug}`} className="fav-cover" style={{ textDecoration:'none' }} tabIndex={dup ? -1 : 0}>
+      <img src={libro.portada} alt={dup ? '' : libro.titulo}
+        style={{ width:'100%', aspectRatio:'2/3', objectFit:'cover', borderRadius:6, border:'1px solid var(--border-warm)', display:'block' }}
+        onError={e => { e.target.style.background='var(--bg-tag)'; e.target.src='' }} />
+      <p style={{ fontSize:11, fontWeight:700, color:'var(--text-dark)', margin:'6px 0 2px', lineHeight:1.25, fontFamily:'Georgia,serif', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden' }}>{libro.titulo}</p>
+      <p style={{ fontSize:10, color:'var(--text-accent)', margin:0, fontFamily:'sans-serif' }}>{'★'.repeat(Math.floor(Number(libro.calificacion) || 0))}</p>
+    </Link>
+  )
   return (
     <div style={{ margin:'1.5rem 0' }}>
       <p style={{ fontSize:11, letterSpacing:'0.14em', textTransform:'uppercase', color:'var(--text-muted)', margin:'0 0 12px', fontFamily:'sans-serif' }}>★ Mis favoritos</p>
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(5, 1fr)', gap:10 }}>
-        {libros.map(libro => (
-          <Link key={libro.id} href={`/resena/${libro.slug}`} style={{ textDecoration:'none' }}>
-            <div style={{ cursor:'pointer', transition:'transform 0.15s' }}
-              onMouseEnter={e => e.currentTarget.style.transform='translateY(-2px)'}
-              onMouseLeave={e => e.currentTarget.style.transform='translateY(0)'}>
-              <img src={libro.portada} alt={libro.titulo}
-                style={{ width:'100%', aspectRatio:'2/3', objectFit:'cover', borderRadius:6, border:'1px solid var(--border-warm)', marginBottom:6 }}
-                onError={e => { e.target.style.background='var(--bg-tag)'; e.target.src='' }} />
-              <p style={{ fontSize:12, fontWeight:700, color:'var(--text-dark)', margin:'0 0 2px', lineHeight:1.25, fontFamily:'Georgia,serif', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden' }}>{libro.titulo}</p>
-              <p style={{ fontSize:10, color:'var(--text-accent)', margin:0, fontFamily:'sans-serif' }}>{'★'.repeat(Math.floor(Number(libro.calificacion) || 0))}</p>
-            </div>
-          </Link>
-        ))}
+      <div className="fav-marquee">
+        <div className="fav-track">
+          <div className="fav-group">
+            {libros.map(libro => <Cover key={libro.id} libro={libro} />)}
+          </div>
+          <div className="fav-group fav-dup" aria-hidden="true">
+            {libros.map(libro => <Cover key={'dup-' + libro.id} libro={libro} dup />)}
+          </div>
+        </div>
       </div>
     </div>
   )
