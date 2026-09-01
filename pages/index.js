@@ -148,7 +148,9 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
         <Perfil />
 
         {!isFiltered && libroDestacado && (
-          <DestacadoCard libro={libroDestacado} />
+          <div className="solo-movil">
+            <DestacadoCard libro={libroDestacado} />
+          </div>
         )}
 
         {!isFiltered && librosFavoritos.length > 0 && (
@@ -245,6 +247,11 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
 
             {/* Sidebar sticky (ahora incluye el widget de Universos literarios adentro) */}
             <div className="sidebar-sticky">
+              {!isFiltered && libroDestacado && (
+                <div className="solo-escritorio" style={{ marginBottom:12 }}>
+                  <DestacadoMini libro={libroDestacado} />
+                </div>
+              )}
               <Sidebar leyendo={leyendo} search={search} setSearch={setSearch}
                 activeTag={activeTag} allTags={allTags} handleTag={handleTag} />
             </div>
@@ -285,6 +292,29 @@ function DestacadoCard({ libro }) {
           <p style={{ fontSize:13, color:'var(--text-body)', lineHeight:1.6, margin:'8px 0 10px', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden' }}>{libro.sinopsis}</p>
           <span style={{ fontSize:12, color:'var(--text-accent)', fontFamily:'sans-serif', fontWeight:500 }}>Leer la reseña completa →</span>
         </div>
+      </div>
+    </Link>
+  )
+}
+
+function DestacadoMini({ libro }) {
+  return (
+    <Link href={`/resena/${libro.slug}`} style={{ textDecoration:'none' }}>
+      <div style={{ background:'var(--bg-sidebar)', border:'1px solid var(--border)', borderRadius:12, padding:'0.9rem', cursor:'pointer', transition:'opacity 0.15s' }}
+        onMouseEnter={e => e.currentTarget.style.opacity='0.92'}
+        onMouseLeave={e => e.currentTarget.style.opacity='1'}>
+        <span style={{ display:'inline-block', background:'var(--btn-bg)', color:'#fff', fontSize:9, padding:'3px 9px', borderRadius:20, fontFamily:'sans-serif', letterSpacing:'0.08em', textTransform:'uppercase', marginBottom:10 }}>★ Destacado del mes</span>
+        <div style={{ display:'flex', gap:10 }}>
+          <img src={libro.portada} alt={libro.titulo}
+            style={{ width:54, height:81, objectFit:'cover', borderRadius:5, border:'1px solid var(--border-warm)', flexShrink:0 }}
+            onError={e => { e.target.style.background='var(--bg-tag)'; e.target.src='' }} />
+          <div style={{ minWidth:0 }}>
+            <p style={{ fontSize:13, fontWeight:700, color:'var(--text-dark)', margin:'0 0 3px', lineHeight:1.25, fontFamily:'Georgia,serif', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden' }}>{libro.titulo}</p>
+            <p style={{ fontSize:11, color:'var(--text-author)', margin:'0 0 4px', fontFamily:'sans-serif' }}>{libro.autor}</p>
+            <Stars n={libro.calificacion} size={12} />
+          </div>
+        </div>
+        <p style={{ fontSize:11, color:'var(--text-accent)', margin:'10px 0 0', fontFamily:'sans-serif', fontWeight:500 }}>Leer la reseña →</p>
       </div>
     </Link>
   )
