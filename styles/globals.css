@@ -8,9 +8,9 @@
   --bg-sidebar:  #fcfcfa;
 
   /* Bordes — familia lila */
-  --border:        #aa83b4;
-  --border-strong: #5d3b66;
-  --border-tag:    #bca2c3;
+  --border:        #8fa0c4;
+  --border-strong: #2e3352;
+  --border-tag:    #a8b6d1;
   --border-btn:    #cdd8c0;
   --border-warm:   #c8bfaa;
 
@@ -18,7 +18,7 @@
   --text-body:   #4a5645;
   --text-muted:  #7a8f72;
   --text-accent: #5a7a50;
-  --text-tag:    #4c3054;
+  --text-tag:    #2a3352;
   --text-author: #305435;
   --text-light:  #e8ede3;
   --text-lighter:#a8c49a;
@@ -104,7 +104,7 @@ img { display: block; max-width: 100%; }
 /* Perfil */
 .perfil-grid {
   display: grid;
-  grid-template-columns: 130px 1fr;
+  grid-template-columns: 145px 1fr;
   gap: 24px;
   padding: 2rem 0;
   border-bottom: 1px solid var(--border);
