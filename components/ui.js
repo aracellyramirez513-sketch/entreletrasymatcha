@@ -97,13 +97,13 @@ export function SiteHeader() {
 export function Perfil() {
   return (
     <div className="perfil-grid">
-      <div style={{ width:120, height:120, borderRadius:'50%', border:'4px solid #2e3352', outline:'2px solid #c9a84c', outlineOffset:2, overflow:'hidden', flexShrink:0 }}>
+      <div style={{ width:135, height:135, borderRadius:'50%', border:'4px solid #2e3352', outline:'2px solid #c9a84c', outlineOffset:2, overflow:'hidden', flexShrink:0 }}>
         <img src="https://i.ibb.co/QvhccK27/IMG-4876.jpg" alt="Ari" style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'50% 8%' }} />
       </div>
       <div>
         <h2 style={{ fontSize:20, fontWeight:700, margin:'0 0 0.5rem', color:'var(--text-dark)' }}>Hola, soy Ari</h2>
         <p style={{ fontSize:15, color:'var(--text-body)', lineHeight:1.75, margin:'0 0 1rem' }}>
-          Leo en los bordes del día, antes del trabajo, en viajes, a veces hasta tarde. Me interesan las historias que me hagan latir el corazón, que me hacen pensar distinto. Aquí escribo sobre lo que leo con honestidad: lo que me encantó, lo que me costó y lo que relearía de nuevo. Siempre con un matcha cerca.
+          Te doy la bienvenida a mi blog de lectura. Amo leer y tener un espacio para compartirlo es algo que disfruto mucho, acá podrás encontrar libros de romance con diferentes tópicos, pero siempre con algo de spicy y obviamente un final feliz. Todos los libros que están aquí me han gustado de cierta manera, y espero que puedas encontrar tu siguiente lectura.
         </p>
         <div style={{ display:'flex', gap:10, flexWrap:'wrap' }}>
           {socialLinks.map(s => <SocialBtn key={s.label} {...s} />)}
