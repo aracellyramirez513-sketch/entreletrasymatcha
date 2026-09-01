@@ -136,6 +136,9 @@ img { display: block; max-width: 100%; }
   transition: border-color 0.15s;
 }
 .card-orden:hover { border-color: var(--border-strong); }
+/* Mostrar/ocultar segun pantalla */
+.solo-movil { display: none; }
+.solo-escritorio { display: block; }
 /* Carrusel de favoritos */
 .fav-marquee {
   overflow: hidden;
@@ -173,6 +176,8 @@ img { display: block; max-width: 100%; }
   .fav-track { animation: none; }
   .fav-dup { display: none; }
   .fav-cover { width: 88px; scroll-snap-align: start; }
+  .solo-movil { display: block; }
+  .solo-escritorio { display: none; }
   .destacado-compacto { grid-template-columns: 72px 1fr !important; gap: 12px !important; }
 }
 /* Responsive */
