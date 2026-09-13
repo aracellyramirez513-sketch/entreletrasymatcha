@@ -9,6 +9,26 @@ const statusColors = {
   'Completo': { color:'#3a6a7a', bg:'#e4f0f5', border:'#aacfda' },
 }
 
+// Convierte el texto plano que viene de Notion en párrafos reales.
+// Notion guarda los saltos como \n y el HTML los colapsa, por eso hay que partirlos a mano.
+function Parrafos({ texto, style, gap = '1rem' }) {
+  const partes = String(texto || '')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .split(/\n+/)
+    .map(p => p.trim())
+    .filter(Boolean)
+
+  if (partes.length === 0) return null
+
+  return (
+    <>
+      {partes.map((p, i) => (
+        <p key={i} style={{ ...style, margin: i === partes.length - 1 ? 0 : `0 0 ${gap}` }}>{p}</p>
+      ))}
+    </>
+  )
+}
+
 export default function DetalleVineta({ vineta }) {
   if (!vineta) return <div className="container"><p>No encontrado</p></div>
   const st = statusColors[vineta.estado] || statusColors['En curso']
@@ -42,12 +62,12 @@ export default function DetalleVineta({ vineta }) {
 
           <div style={{ borderTop:'1px solid var(--v-border)', paddingTop:'1.5rem', marginBottom:'1.5rem' }}>
             <p style={{ fontSize:11, fontFamily:'sans-serif', textTransform:'uppercase', letterSpacing:'0.1em', color:'var(--text-muted)', margin:'0 0 0.75rem' }}>Sinopsis</p>
-            <p style={{ fontSize:15, color:'var(--text-body)', lineHeight:1.8 }}>{vineta.sinopsis}</p>
+            <Parrafos texto={vineta.sinopsis} style={{ fontSize:15, color:'var(--text-body)', lineHeight:1.8 }} />
           </div>
 
           <div style={{ background:'var(--v-bg)', border:'1px solid var(--v-border)', borderRadius:12, padding:'1.25rem 1.5rem', marginBottom:'1.5rem' }}>
             <p style={{ fontSize:11, fontFamily:'sans-serif', textTransform:'uppercase', letterSpacing:'0.1em', color:'var(--text-muted)', margin:'0 0 0.75rem' }}>Mi reseña</p>
-            <p style={{ fontSize:15, color:'var(--text-body)', lineHeight:1.85, fontStyle:'italic' }}>{vineta.resena}</p>
+            <Parrafos texto={vineta.resena} style={{ fontSize:15, color:'var(--text-body)', lineHeight:1.85, fontStyle:'italic' }} gap="1.1rem" />
           </div>
 
           {vineta.link_compra && (
