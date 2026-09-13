@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { getLibros, getLibro } from '../../lib/notion'
+import { getLibros, getLibro, getContextoSerie } from '../../lib/notion'
 import { Stars, Pill, SiteHeader, Newsletter, Footer } from '../../components/ui'
 import Comentarios from '../../components/Comentarios'
 
@@ -24,7 +24,107 @@ function Parrafos({ texto, style, gap = '1rem' }) {
   )
 }
 
-export default function DetalleLibro({ libro, slug }) {
+// Miniatura de un libro dentro de la tira de la serie.
+// Con reseña es un link, sin reseña queda apagada, y la actual va marcada.
+function MiniLibro({ libro }) {
+  const marco = libro.actual
+    ? '2px solid #c9a84c'
+    : libro.slug
+      ? '1px solid var(--border-warm)'
+      : '1px dashed #c4b49c'
+
+  const contenido = (
+    <div style={{ position:'relative', width:56 }}>
+      <div style={{ width:56, height:84, borderRadius:6, border:marco, overflow:'hidden', background:'var(--bg-tag)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+        {libro.portada
+          ? <img src={libro.portada} alt={libro.titulo} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
+          : <span style={{ fontSize:18, color:'var(--text-muted)', fontFamily:'sans-serif' }}>{libro.numero || '?'}</span>}
+      </div>
+      {libro.numero && (
+        <span style={{ position:'absolute', top:4, left:4, background: libro.actual ? '#c9a84c' : '#9b7b5e', color:'#fff', fontSize:10, fontFamily:'sans-serif', fontWeight:700, borderRadius:3, padding:'1px 5px' }}>{libro.numero}</span>
+      )}
+    </div>
+  )
+
+  if (libro.slug && !libro.actual) {
+    return (
+      <Link href={`/resena/${libro.slug}`} title={libro.titulo} style={{ textDecoration:'none' }}>
+        {contenido}
+      </Link>
+    )
+  }
+
+  return (
+    <div title={libro.actual ? `${libro.titulo} (estás acá)` : `${libro.titulo} — reseña en camino`}
+      style={{ opacity: libro.slug ? 1 : 0.45, cursor:'default' }}>
+      {contenido}
+    </div>
+  )
+}
+
+// Tarjeta de anterior / siguiente
+function TarjetaVecina({ libro, direccion }) {
+  const esSiguiente = direccion === 'siguiente'
+
+  return (
+    <Link href={`/resena/${libro.slug}`}
+      style={{ display:'flex', gap:12, alignItems:'center', background:'var(--bg-card)', border:'1px solid var(--border)', borderRadius:12, padding:12, textDecoration:'none', flexDirection: esSiguiente ? 'row-reverse' : 'row' }}>
+      {libro.portada
+        ? <img src={libro.portada} alt="" style={{ width:38, height:56, objectFit:'cover', borderRadius:4, border:'1px solid var(--border-warm)', flexShrink:0 }} />
+        : <div style={{ width:38, height:56, borderRadius:4, background:'var(--bg-tag)', flexShrink:0 }} />}
+      <div style={{ minWidth:0, textAlign: esSiguiente ? 'right' : 'left', flex:1 }}>
+        <p style={{ margin:0, fontSize:11, fontFamily:'sans-serif', color:'#9b7b5e', textTransform:'uppercase', letterSpacing:'0.06em' }}>
+          {esSiguiente ? 'Siguiente' : 'Anterior'}{libro.numero ? ` · Libro ${libro.numero}` : ''}
+        </p>
+        <p style={{ margin:'3px 0 0', fontSize:14, color:'var(--text-dark)', lineHeight:1.35 }}>{libro.titulo}</p>
+      </div>
+    </Link>
+  )
+}
+
+function NavSerie({ contexto }) {
+  if (!contexto || !Array.isArray(contexto.libros) || contexto.libros.length === 0) return null
+
+  const { orden, libros, anterior, siguiente, posicion, total } = contexto
+  const hayVecinos = Boolean(anterior || siguiente)
+  const hayTira = libros.length > 1
+
+  if (!orden && !hayVecinos && !hayTira) return null
+
+  return (
+    <div style={{ borderTop:'1px solid var(--border)', paddingTop:'1.5rem', marginBottom:'1.5rem' }}>
+      <p style={{ fontSize:11, fontFamily:'sans-serif', textTransform:'uppercase', letterSpacing:'0.1em', color:'var(--text-muted)', margin:'0 0 0.75rem' }}>Seguir leyendo la serie</p>
+
+      {orden && (
+        <Link href={`/orden/${orden.slug}`}
+          style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:12, background:'var(--bg-card)', border:'1px solid var(--border)', borderRadius:12, padding:'12px 16px', marginBottom:hayVecinos || hayTira ? '1rem' : 0, textDecoration:'none' }}>
+          <div style={{ minWidth:0 }}>
+            {posicion && total ? (
+              <p style={{ margin:0, fontSize:12, fontFamily:'sans-serif', color:'#9b7b5e' }}>Libro {posicion} de {total}</p>
+            ) : null}
+            <p style={{ margin:'2px 0 0', fontSize:15, color:'var(--text-dark)' }}>{orden.titulo}</p>
+          </div>
+          <span style={{ fontSize:13, fontFamily:'sans-serif', color:'var(--text-accent)', whiteSpace:'nowrap' }}>Ver el orden completo →</span>
+        </Link>
+      )}
+
+      {hayVecinos && (
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))', gap:12, marginBottom: hayTira ? '1.25rem' : 0 }}>
+          {anterior && <TarjetaVecina libro={anterior} direccion="anterior" />}
+          {siguiente && <TarjetaVecina libro={siguiente} direccion="siguiente" />}
+        </div>
+      )}
+
+      {hayTira && (
+        <div style={{ display:'flex', gap:10, flexWrap:'wrap' }}>
+          {libros.map((l, i) => <MiniLibro key={l.slug || `sin-resena-${i}`} libro={l} />)}
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default function DetalleLibro({ libro, slug, contexto }) {
   if (!libro) return <div className="container"><p>No encontrado</p></div>
 
   const tags = Array.isArray(libro.tags) ? libro.tags : (libro.tags||'').split(',').map(t=>t.trim()).filter(Boolean)
@@ -35,6 +135,11 @@ export default function DetalleLibro({ libro, slug }) {
     desc:   libro[`protagonista${n}_descripcion`],
     tags:   (libro[`protagonista${n}_tags`]||'').split(',').map(t=>t.trim()).filter(Boolean),
   }))
+
+  const ordenDeLaSerie = contexto && contexto.orden ? contexto.orden : null
+  const lineaSerie = libro.serie
+    ? `${libro.serie}${libro.numero_serie ? ` · Libro ${libro.numero_serie}` : ''}`
+    : ''
 
   return (
     <>
@@ -61,7 +166,15 @@ export default function DetalleLibro({ libro, slug }) {
             <div>
               <Pill>{libro.categoria}</Pill>
               <h1 style={{ fontSize:26, fontWeight:700, margin:'0.5rem 0 0.25rem', color:'var(--text-dark)', lineHeight:1.2 }}>{libro.titulo}</h1>
-              {libro.serie && <p style={{ fontSize:13, color:'#9b7b5e', margin:'0 0 0.25rem', fontFamily:'sans-serif', fontStyle:'italic' }}>{libro.serie}{libro.numero_serie ? ` · Libro ${libro.numero_serie}` : ''}</p>}
+              {lineaSerie && (
+                ordenDeLaSerie ? (
+                  <p style={{ fontSize:13, margin:'0 0 0.25rem', fontFamily:'sans-serif', fontStyle:'italic' }}>
+                    <Link href={`/orden/${ordenDeLaSerie.slug}`} style={{ color:'var(--text-accent)', textDecoration:'none' }}>{lineaSerie}</Link>
+                  </p>
+                ) : (
+                  <p style={{ fontSize:13, color:'#9b7b5e', margin:'0 0 0.25rem', fontFamily:'sans-serif', fontStyle:'italic' }}>{lineaSerie}</p>
+                )
+              )}
               <p style={{ fontSize:14, color:'var(--text-muted)', margin:'0 0 0.75rem', fontFamily:'sans-serif' }}>{libro.autor}</p>
               <Stars n={libro.calificacion} size={18} />
 
@@ -143,6 +256,9 @@ export default function DetalleLibro({ libro, slug }) {
             </div>
           )}
 
+          {/* Navegación de la serie */}
+          <NavSerie contexto={contexto} />
+
           {/* Comentarios */}
           <Comentarios slug={slug} />
         </div>
@@ -165,5 +281,13 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   const libro = await getLibro(params.slug)
   if (!libro) return { notFound: true }
-  return { props: { libro, slug: params.slug }, revalidate: 60 }
+
+  let contexto = null
+  try {
+    contexto = await getContextoSerie(libro)
+  } catch (e) {
+    contexto = null
+  }
+
+  return { props: { libro, slug: params.slug, contexto }, revalidate: 60 }
 }
