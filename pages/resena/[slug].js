@@ -4,6 +4,26 @@ import { getLibros, getLibro } from '../../lib/notion'
 import { Stars, Pill, SiteHeader, Newsletter, Footer } from '../../components/ui'
 import Comentarios from '../../components/Comentarios'
 
+// Convierte el texto plano que viene de Notion en párrafos reales.
+// Notion guarda los saltos como \n y el HTML los colapsa, por eso hay que partirlos a mano.
+function Parrafos({ texto, style, gap = '1rem' }) {
+  const partes = String(texto || '')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .split(/\n+/)
+    .map(p => p.trim())
+    .filter(Boolean)
+
+  if (partes.length === 0) return null
+
+  return (
+    <>
+      {partes.map((p, i) => (
+        <p key={i} style={{ ...style, margin: i === partes.length - 1 ? 0 : `0 0 ${gap}` }}>{p}</p>
+      ))}
+    </>
+  )
+}
+
 export default function DetalleLibro({ libro, slug }) {
   if (!libro) return <div className="container"><p>No encontrado</p></div>
 
@@ -61,7 +81,7 @@ export default function DetalleLibro({ libro, slug }) {
           {/* Sinopsis */}
           <div style={{ borderTop:'1px solid var(--border)', paddingTop:'1.5rem', marginBottom:'1.5rem' }}>
             <p style={{ fontSize:11, fontFamily:'sans-serif', textTransform:'uppercase', letterSpacing:'0.1em', color:'var(--text-muted)', margin:'0 0 0.75rem' }}>Sinopsis</p>
-            <p style={{ fontSize:15, color:'var(--text-body)', lineHeight:1.8 }}>{libro.sinopsis}</p>
+            <Parrafos texto={libro.sinopsis} style={{ fontSize:15, color:'var(--text-body)', lineHeight:1.8 }} />
           </div>
 
           {/* Protagonistas */}
@@ -74,7 +94,11 @@ export default function DetalleLibro({ libro, slug }) {
                     <div style={{ fontSize:32, fontWeight:700, color:'#9b7b5e', marginBottom:'0.5rem', lineHeight:1 }}>{p.nombre.charAt(0).toUpperCase()}</div>
                     <p style={{ fontSize:14, fontWeight:700, color:'var(--text-dark)', margin:'0 0 2px', fontFamily:'sans-serif', textTransform:'uppercase', letterSpacing:'0.05em' }}>{p.nombre}</p>
                     {p.rol && <p style={{ fontSize:11, color:'#9b7b5e', margin:'0 0 0.75rem', fontFamily:'sans-serif', textTransform:'uppercase', letterSpacing:'0.08em' }}>{p.rol}</p>}
-                    {p.desc && <p style={{ fontSize:13, color:'var(--text-body)', lineHeight:1.65, margin:'0 0 0.75rem' }}>{p.desc}</p>}
+                    {p.desc && (
+                      <div style={{ margin:'0 0 0.75rem' }}>
+                        <Parrafos texto={p.desc} style={{ fontSize:13, color:'var(--text-body)', lineHeight:1.65 }} gap="0.6rem" />
+                      </div>
+                    )}
                     {p.tags.length > 0 && (
                       <div style={{ display:'flex', flexWrap:'wrap', gap:5 }}>
                         {p.tags.map(t => <span key={t} style={{ fontSize:11, padding:'2px 9px', borderRadius:4, fontFamily:'sans-serif', background:'#efe3d8', color:'#7a5c45', border:'1px solid #d4bfaa', textTransform:'uppercase', letterSpacing:'0.05em' }}>{t}</span>)}
@@ -89,7 +113,7 @@ export default function DetalleLibro({ libro, slug }) {
           {/* Reseña */}
           <div style={{ background:'var(--bg-card)', border:'1px solid var(--border)', borderRadius:12, padding:'1.25rem 1.5rem', marginBottom:'1.5rem' }}>
             <p style={{ fontSize:11, fontFamily:'sans-serif', textTransform:'uppercase', letterSpacing:'0.1em', color:'var(--text-muted)', margin:'0 0 0.75rem' }}>Mi reseña</p>
-            <p style={{ fontSize:15, color:'var(--text-body)', lineHeight:1.85, fontStyle:'italic' }}>{libro.resena}</p>
+            <Parrafos texto={libro.resena} style={{ fontSize:15, color:'var(--text-body)', lineHeight:1.85, fontStyle:'italic' }} gap="1.1rem" />
           </div>
 
           {/* Para quién es */}
