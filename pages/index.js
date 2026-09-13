@@ -50,6 +50,10 @@ const catFilterColors = {
 }
 const catFilterFallback = { bg: '#eae4d8', color: '#6b5b45' }
 
+// 📖 Línea lateral de las tarjetas de libro, igual que la de viñetas y rincón.
+// Si la quieres más oscura, cambia este valor a '#5a7a50'.
+const libroAccent = '#7A9E7E'
+
 // 🎨 Colores por tipo de viñeta, en la familia azul de la sección
 const visualFilterColors = {
   'manga':  { bg: '#d8e8f0', color: '#2f5a70' },
@@ -465,7 +469,7 @@ function ItemCard({ item, activeTag, handleTag }) {
       .filter(t => t.trim().toLowerCase() !== cat)
     return (
       <Link href={`/resena/${item.slug}`} style={{ textDecoration:'none' }}>
-        <div className="card" style={{ display:'grid', gridTemplateColumns:'80px 1fr', gap:14 }}>
+        <div className="card" style={{ display:'grid', gridTemplateColumns:'80px 1fr', gap:14, borderLeft:`4px solid ${libroAccent}`, borderRadius:12 }}>
           <img src={item.portada} alt={item.titulo}
             style={{ width:80, height:115, objectFit:'cover', borderRadius:6, border:'1px solid var(--border-warm)' }}
             onError={e => { e.target.style.background='var(--bg-tag)'; e.target.src='' }} />
