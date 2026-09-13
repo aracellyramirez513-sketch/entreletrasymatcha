@@ -50,12 +50,70 @@ const catFilterColors = {
 }
 const catFilterFallback = { bg: '#eae4d8', color: '#6b5b45' }
 
+// 🎨 Colores por tipo de viñeta, en la familia azul de la sección
+const visualFilterColors = {
+  'manga':  { bg: '#d8e8f0', color: '#2f5a70' },
+  'manhwa': { bg: '#dfe1f0', color: '#3a4070' },
+  'manhua': { bg: '#f0dde8', color: '#70365a' },
+  'cómic':  { bg: '#f0e4d6', color: '#70563a' },
+  'comic':  { bg: '#f0e4d6', color: '#70563a' },
+}
+const visualFilterFallback = { bg: '#e4f0f5', color: '#3a6a7a' }
+
+// 🌿 Colores por estado de viñeta y por tipo de entrada del rincón,
+// derivados de los mismos mapas que usan las tarjetas
+const estadoFilterColors = {
+  'en curso': { bg: '#e8ede3', color: '#5a7a50' },
+  'completo': { bg: '#e4f0f5', color: '#3a6a7a' },
+}
+const estadoFilterFallback = { bg: '#eae4d8', color: '#6b5b45' }
+
+const rinconFilterColors = {
+  'reflexion':   { bg: '#f5ede4', color: '#7a6a50' },
+  'reflexión':   { bg: '#f5ede4', color: '#7a6a50' },
+  'noticia':     { bg: '#e4f0f5', color: '#3a6a7a' },
+  'lista':       { bg: '#e8ede3', color: '#5a7a50' },
+  'cita':        { bg: '#f0e8f5', color: '#7a5080' },
+}
+const rinconFilterFallback = { bg: '#f5ede4', color: '#7a6a50' }
+
+// 🔎 Qué campo alimenta la segunda fila de filtros en cada pestaña.
+// "todo" no aparece acá a propósito: mezclar categorías de romance con
+// tipos de manhwa no filtra nada útil.
+const subFiltros = {
+  resena: { campo: 'categoria',  todos: 'Todas', colores: catFilterColors,    fallback: catFilterFallback,    etiqueta: v => v },
+  orden:  { campo: 'categoria',  todos: 'Todas', colores: catFilterColors,    fallback: catFilterFallback,    etiqueta: v => v },
+  vineta: { campo: 'visualtype', todos: 'Todos', colores: visualFilterColors, fallback: visualFilterFallback, etiqueta: v => visualTypes[String(v).toLowerCase()] || v },
+  rincon: { campo: 'entrytype',  todos: 'Todas', colores: rinconFilterColors, fallback: rinconFilterFallback, etiqueta: v => (entryTypes[String(v).toLowerCase()] || {}).label || v },
+}
+
+// Una fila de filtro solo aparece si hay al menos esta cantidad de opciones.
+// Con 1 sola opción el filtro no filtra nada, por eso el mínimo es 2.
+// Si prefieres que se vea siempre, cambia este número a 1.
+const MIN_OPCIONES_FILTRO = 2
+
 // 📄 Cuántas entradas se muestran por página
 const PER_PAGE = 10
 
+// Junta los valores distintos de un campo, conservando cómo vienen escritos
+function opcionesDe(items, campo) {
+  const map = new Map()
+  items.forEach(item => {
+    const v = String(item[campo] ?? '').trim()
+    if (v) {
+      const key = v.toLowerCase()
+      if (!map.has(key)) map.set(key, v)
+    }
+  })
+  return Array.from(map.entries())
+    .map(([key, label]) => ({ key, label }))
+    .sort((a, b) => a.label.localeCompare(b.label))
+}
+
 export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
   const [activeCat, setActiveCat] = useState('todo')
-  const [activeCategoria, setActiveCategoria] = useState(null)
+  const [activeSub, setActiveSub] = useState(null)
+  const [activeEstado, setActiveEstado] = useState(null)
   const [activeTag, setActiveTag] = useState(null)
   const [search, setSearch]       = useState('')
   const [page, setPage]           = useState(1)
@@ -74,24 +132,39 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
     return Array.from(set).sort()
   }, [allItems])
 
-  // 🏷️ Subgéneros disponibles, tomados del campo "categoria" de los libros/órdenes
-  const allCategorias = useMemo(() => {
-    const map = new Map()
-    allItems.forEach(item => {
-      const c = String(item.categoria || '').trim()
-      if (c) {
-        const key = c.toLowerCase()
-        if (!map.has(key)) map.set(key, c)
-      }
-    })
-    return Array.from(map.entries())
-      .map(([key, label]) => ({ key, label }))
-      .sort((a, b) => a.label.localeCompare(b.label))
-  }, [allItems])
+  const catActiva = useMemo(() => catConfig.find(c => c.key === activeCat) || catConfig[0], [activeCat])
+
+  // Entradas de la pestaña activa, antes de aplicar subfiltro, tag o búsqueda
+  const itemsDeTab = useMemo(
+    () => activeCat === 'todo' ? allItems : allItems.filter(i => i.type === activeCat),
+    [allItems, activeCat]
+  )
+
+  const subActivo = subFiltros[activeCat] || null
+
+  // 🏷️ Opciones de la segunda fila, generadas desde las entradas que existen
+  const opcionesSub = useMemo(
+    () => subActivo ? opcionesDe(itemsDeTab, subActivo.campo) : [],
+    [itemsDeTab, subActivo]
+  )
+
+  // 🎨 Solo en Viñetas: fila extra por estado de publicación
+  const opcionesEstado = useMemo(
+    () => activeCat === 'vineta' ? opcionesDe(itemsDeTab, 'estado') : [],
+    [itemsDeTab, activeCat]
+  )
+
+  const muestraSub = opcionesSub.length >= MIN_OPCIONES_FILTRO
+  const muestraEstado = opcionesEstado.length >= MIN_OPCIONES_FILTRO
 
   const filtered = useMemo(() => {
-    let items = activeCat === 'todo' ? allItems : allItems.filter(i => i.type === activeCat || (activeCat==='orden' && i.type==='orden'))
-    if (activeCategoria) items = items.filter(i => String(i.categoria || '').trim().toLowerCase() === activeCategoria)
+    let items = itemsDeTab
+    if (subActivo && activeSub) {
+      items = items.filter(i => String(i[subActivo.campo] ?? '').trim().toLowerCase() === activeSub)
+    }
+    if (activeCat === 'vineta' && activeEstado) {
+      items = items.filter(i => String(i.estado ?? '').trim().toLowerCase() === activeEstado)
+    }
     if (activeTag) items = items.filter(i => {
       const tags = Array.isArray(i.tags) ? i.tags : (i.tags||'').split(',').map(t=>t.trim())
       return tags.includes(activeTag)
@@ -105,15 +178,17 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
       )
     }
     return items
-  }, [allItems, activeCat, activeCategoria, activeTag, search])
+  }, [itemsDeTab, subActivo, activeCat, activeSub, activeEstado, activeTag, search])
 
-  const isFiltered = activeCat !== 'todo' || activeCategoria || activeTag || search
+  const isFiltered = activeCat !== 'todo' || activeSub || activeEstado || activeTag || search
 
   // 📄 Paginación
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE))
 
+  // Al cambiar de pestaña se limpian los subfiltros, porque los campos son distintos
+  useEffect(() => { setActiveSub(null); setActiveEstado(null) }, [activeCat])
   // Si cambian los filtros, volvemos a la página 1
-  useEffect(() => { setPage(1) }, [activeCat, activeCategoria, activeTag, search])
+  useEffect(() => { setPage(1) }, [activeCat, activeSub, activeEstado, activeTag, search])
   // Si la página actual queda fuera de rango, la corregimos
   useEffect(() => { if (page > totalPages) setPage(1) }, [page, totalPages])
 
@@ -187,47 +262,35 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
             })}
           </div>
 
-          {/* 🏷️ Filtros por subgénero (se suman a los de arriba) */}
-          {allCategorias.length > 0 && (
-            <div style={{ display:'flex', gap:8, flexWrap:'wrap', marginBottom:'1.5rem' }}>
-              <button
-                onClick={() => setActiveCategoria(null)}
-                style={{
-                  padding:'6px 14px',
-                  borderRadius:20,
-                  fontSize:13,
-                  fontFamily:'sans-serif',
-                  fontWeight:500,
-                  border:'1px solid #d9cfbf',
-                  background: activeCategoria === null ? '#7A9E7E' : '#f0ece3',
-                  color: activeCategoria === null ? '#fff' : '#7a6a50',
-                  cursor:'pointer',
-                  transition:'all 0.15s'
-                }}>
-                Todas
-              </button>
-              {allCategorias.map(c => {
-                const col = catFilterColors[c.key] || catFilterFallback
-                const isActive = activeCategoria === c.key
-                return (
-                  <button key={c.key}
-                    onClick={() => setActiveCategoria(prev => prev === c.key ? null : c.key)}
-                    style={{
-                      padding:'6px 14px',
-                      borderRadius:20,
-                      fontSize:13,
-                      fontFamily:'sans-serif',
-                      fontWeight:500,
-                      border: `1px solid ${isActive ? col.color : 'transparent'}`,
-                      background: isActive ? col.color : col.bg,
-                      color: isActive ? '#fff' : col.color,
-                      cursor:'pointer',
-                      transition:'all 0.15s'
-                    }}>
-                    {c.label}
-                  </button>
-                )
-              })}
+          {/* 🏷️ Filtros de la pestaña activa (se suman a los de arriba) */}
+          {(muestraSub || muestraEstado) && (
+            <div style={{ display:'flex', flexDirection:'column', gap:8, marginBottom:'1.5rem' }}>
+              {muestraSub && (
+                <FilaFiltro
+                  opciones={opcionesSub}
+                  valor={activeSub}
+                  setValor={setActiveSub}
+                  colores={subActivo.colores}
+                  fallback={subActivo.fallback}
+                  etiqueta={subActivo.etiqueta}
+                  todos={subActivo.todos}
+                  accent={catActiva.activeBg}
+                  borde={catActiva.border}
+                />
+              )}
+              {muestraEstado && (
+                <FilaFiltro
+                  opciones={opcionesEstado}
+                  valor={activeEstado}
+                  setValor={setActiveEstado}
+                  colores={estadoFilterColors}
+                  fallback={estadoFilterFallback}
+                  etiqueta={v => v}
+                  todos="Todos"
+                  accent={catActiva.activeBg}
+                  borde={catActiva.border}
+                />
+              )}
             </div>
           )}
 
@@ -268,6 +331,53 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
         <Footer />
       </div>
     </>
+  )
+}
+
+// 🏷️ Una fila de pills de filtro. El botón "Todas/Todos" toma el color
+// de la pestaña activa para que la fila se sienta parte de la sección.
+function FilaFiltro({ opciones, valor, setValor, colores, fallback, etiqueta, todos, accent, borde }) {
+  return (
+    <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+      <button
+        onClick={() => setValor(null)}
+        style={{
+          padding:'6px 14px',
+          borderRadius:20,
+          fontSize:13,
+          fontFamily:'sans-serif',
+          fontWeight:500,
+          border:`1px solid ${valor === null ? accent : borde}`,
+          background: valor === null ? accent : '#f0ece3',
+          color: valor === null ? '#fff' : '#7a6a50',
+          cursor:'pointer',
+          transition:'all 0.15s'
+        }}>
+        {todos}
+      </button>
+      {opciones.map(o => {
+        const col = colores[o.key] || fallback
+        const isActive = valor === o.key
+        return (
+          <button key={o.key}
+            onClick={() => setValor(prev => prev === o.key ? null : o.key)}
+            style={{
+              padding:'6px 14px',
+              borderRadius:20,
+              fontSize:13,
+              fontFamily:'sans-serif',
+              fontWeight:500,
+              border: `1px solid ${isActive ? col.color : 'transparent'}`,
+              background: isActive ? col.color : col.bg,
+              color: isActive ? '#fff' : col.color,
+              cursor:'pointer',
+              transition:'all 0.15s'
+            }}>
+            {etiqueta(o.label)}
+          </button>
+        )
+      })}
+    </div>
   )
 }
 
