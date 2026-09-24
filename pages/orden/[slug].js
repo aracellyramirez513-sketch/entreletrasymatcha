@@ -29,7 +29,7 @@ export default function DetalleOrden({ orden, slug }) {
   return (
     <>
       <Head>
-        <title>{orden.titulo} — Orden de lectura · Entre letras y matcha</title>
+        <title>{`${orden.titulo} — Orden de lectura · Entre letras y matcha`}</title>
         <meta name="description" content={`Orden de lectura de ${orden.titulo} de ${orden.autor}. ${orden.descripcion}`} />
         <meta property="og:title" content={`${orden.titulo} — Orden de lectura`} />
         {orden.portada_saga && <meta property="og:image" content={orden.portada_saga} />}
