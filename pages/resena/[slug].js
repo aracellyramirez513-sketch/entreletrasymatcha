@@ -136,6 +136,8 @@ export default function DetalleLibro({ libro, slug, contexto }) {
     tags:   (libro[`protagonista${n}_tags`]||'').split(',').map(t=>t.trim()).filter(Boolean),
   }))
 
+  const tituloSEO = `${libro.titulo}${libro.autor ? ` de ${libro.autor}` : ''}: reseña | Entre letras y matcha`
+
   const ordenDeLaSerie = contexto && contexto.orden ? contexto.orden : null
   const lineaSerie = libro.serie
     ? `${libro.serie}${libro.numero_serie ? ` · Libro ${libro.numero_serie}` : ''}`
@@ -144,9 +146,9 @@ export default function DetalleLibro({ libro, slug, contexto }) {
   return (
     <>
       <Head>
-        <title>{`${libro.titulo} — Entre letras y matcha`}</title>
+        <title>{tituloSEO}</title>
         <meta name="description" content={libro.sinopsis?.slice(0,160)} />
-        <meta property="og:title" content={`${libro.titulo} — Entre letras y matcha`} />
+        <meta property="og:title" content={tituloSEO} />
         <meta property="og:description" content={libro.sinopsis?.slice(0,160)} />
         {libro.portada && <meta property="og:image" content={libro.portada} />}
       </Head>
