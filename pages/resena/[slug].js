@@ -144,7 +144,7 @@ export default function DetalleLibro({ libro, slug, contexto }) {
   return (
     <>
       <Head>
-        <title>{libro.titulo} — Entre letras y matcha</title>
+        <title>{`${libro.titulo} — Entre letras y matcha`}</title>
         <meta name="description" content={libro.sinopsis?.slice(0,160)} />
         <meta property="og:title" content={`${libro.titulo} — Entre letras y matcha`} />
         <meta property="og:description" content={libro.sinopsis?.slice(0,160)} />
