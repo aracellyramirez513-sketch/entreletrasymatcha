@@ -11,7 +11,7 @@ export default function DetalleUniverso({ universo, seriesDelUniverso }) {
   return (
     <>
       <Head>
-        <title>{universo.nombre} — Universo · Entre letras y matcha</title>
+        <title>{`${universo.nombre} — Universo · Entre letras y matcha`}</title>
         <meta name="description" content={`Universo literario de ${universo.autor}. ${universo.descripcion}`} />
         <meta property="og:title" content={`${universo.nombre} — Universo literario`} />
         {universo.imagen_autor && <meta property="og:image" content={universo.imagen_autor} />}
