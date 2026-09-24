@@ -33,12 +33,18 @@ export default function DetalleVineta({ vineta }) {
   if (!vineta) return <div className="container"><p>No encontrado</p></div>
   const st = statusColors[vineta.estado] || statusColors['En curso']
   const tags = Array.isArray(vineta.tags) ? vineta.tags : (vineta.tags||'').split(',').map(t=>t.trim()).filter(Boolean)
+  const tipo = visualTypes[vineta.visualtype] || ''
+  const tituloSEO = `${vineta.titulo}: ${tipo ? `reseña del ${tipo.toLowerCase()}` : 'reseña'} | Entre letras y matcha`
+  const descripcionSEO = vineta.sinopsis?.slice(0,160)
 
   return (
     <>
       <Head>
-        <title>{vineta.titulo} — Entre letras y matcha</title>
-        <meta name="description" content={vineta.sinopsis?.slice(0,160)} />
+        <title>{tituloSEO}</title>
+        <meta name="description" content={descripcionSEO} />
+        <meta property="og:title" content={tituloSEO} />
+        <meta property="og:description" content={descripcionSEO} />
+        {vineta.portada && <meta property="og:image" content={vineta.portada} />}
       </Head>
       <div className="container">
         <SiteHeader />
