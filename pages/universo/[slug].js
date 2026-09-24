@@ -7,13 +7,16 @@ export default function DetalleUniverso({ universo, seriesDelUniverso }) {
   if (!universo) return <div className="container"><p>Universo no encontrado</p></div>
 
   const tropes = Array.isArray(universo.tropes_principales) ? universo.tropes_principales : []
+  const tituloSEO = universo.autor
+    ? `${universo.nombre}: libros de ${universo.autor} en orden | Entre letras y matcha`
+    : `${universo.nombre}: universo literario | Entre letras y matcha`
 
   return (
     <>
       <Head>
-        <title>{`${universo.nombre} — Universo · Entre letras y matcha`}</title>
+        <title>{tituloSEO}</title>
         <meta name="description" content={`Universo literario de ${universo.autor}. ${universo.descripcion}`} />
-        <meta property="og:title" content={`${universo.nombre} — Universo literario`} />
+        <meta property="og:title" content={tituloSEO} />
         {universo.imagen_autor && <meta property="og:image" content={universo.imagen_autor} />}
       </Head>
 
