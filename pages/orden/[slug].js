@@ -18,6 +18,14 @@ const estadoInfo = {
   'Abandonada':{ color: '#791F1F', bg: '#FCEBEB', border: '#F09595' },
 }
 
+// Quita el prefijo "Orden para leer - " que viene desde Notion
+function nombreSaga(str) {
+  const limpio = String(str || '')
+    .replace(/^\s*Orden\s+(para\s+leer|de\s+lectura)\s*[-–—:]\s*/i, '')
+    .trim()
+  return limpio || String(str || '')
+}
+
 export default function DetalleOrden({ orden, slug }) {
   if (!orden) return <div className="container"><p>No encontrado</p></div>
 
@@ -26,12 +34,18 @@ export default function DetalleOrden({ orden, slug }) {
   const tipoInfo = tipoOrdenInfo[orden.tipo_orden] || null
   const estInfo = estadoInfo[orden.estado] || null
 
+  const saga = nombreSaga(orden.titulo)
+  const sagaConAutor = orden.autor ? `${saga} de ${orden.autor}` : saga
+  const tituloSEO = `${sagaConAutor}: orden de lectura | Entre letras y matcha`
+  const descripcionSEO = `Orden de lectura de ${sagaConAutor}.${orden.descripcion ? ` ${orden.descripcion}` : ''}`
+
   return (
     <>
       <Head>
-        <title>{`${orden.titulo} — Orden de lectura · Entre letras y matcha`}</title>
-        <meta name="description" content={`Orden de lectura de ${orden.titulo} de ${orden.autor}. ${orden.descripcion}`} />
-        <meta property="og:title" content={`${orden.titulo} — Orden de lectura`} />
+        <title>{tituloSEO}</title>
+        <meta name="description" content={descripcionSEO} />
+        <meta property="og:title" content={tituloSEO} />
+        <meta property="og:description" content={descripcionSEO} />
         {orden.portada_saga && <meta property="og:image" content={orden.portada_saga} />}
       </Head>
 
