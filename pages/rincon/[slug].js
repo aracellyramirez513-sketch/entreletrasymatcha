@@ -372,7 +372,6 @@ export default function DetallePost({ post, slug }) {
             <div style={{ display:'flex', gap:8, alignItems:'center', marginBottom:'0.75rem' }}>
               <Pill bg="#fff" color={et.color} border={et.border}>{etiqueta}</Pill>
               <span style={{ fontSize:12, color:et.color, fontFamily:'sans-serif', opacity:0.8 }}>Desde mi rincón</span>
-              <span style={{ fontSize:12, color:et.color, fontFamily:'sans-serif', opacity:0.7, marginLeft:'auto' }}>{post.fecha}</span>
             </div>
             <h1 style={{ fontSize:28, fontWeight:700, color:'var(--text-dark)', lineHeight:1.25, margin:'0 0 1rem' }}>{post.titulo}</h1>
             {tags.length > 0 && <div style={{ display:'flex', flexWrap:'wrap', gap:5 }}>{tags.map(t => <Pill key={t}>{t}</Pill>)}</div>}
