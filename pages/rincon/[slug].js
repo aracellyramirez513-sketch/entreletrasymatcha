@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { getRincon, getPost } from '../../lib/notion'
 import { Pill, SiteHeader, Newsletter, Footer } from '../../components/ui'
+import Comentarios from '../../components/Comentarios'
 
 const entryTypes = {
   reflexion:   { label:'Reflexión',        color:'#7a6a50', bg:'#f5ede4', border:'#d4bfaa' },
@@ -321,7 +322,7 @@ function TarjetaLibro({ libro, numero, et }) {
 
 // ─── Página ──────────────────────────────────────────────────────────────────
 
-export default function DetallePost({ post }) {
+export default function DetallePost({ post, slug }) {
   if (!post) return <div className="container"><p>No encontrado</p></div>
 
   const et = entryTypes[post.entrytype] || entryTypes.reflexion
@@ -407,6 +408,11 @@ export default function DetallePost({ post }) {
               </p>
             </div>
           )}
+
+          {/* Comentarios. pageType="rincon" los separa de los de reseñas con el mismo slug */}
+          <div style={{ marginTop:'2.5rem' }}>
+            <Comentarios slug={slug} pageType="rincon" />
+          </div>
         </div>
         <Newsletter />
         <Footer />
@@ -423,5 +429,5 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   const post = await getPost(params.slug)
   if (!post) return { notFound: true }
-  return { props: { post }, revalidate: 60 }
+  return { props: { post, slug: params.slug }, revalidate: 60 }
 }
