@@ -55,7 +55,7 @@ const socialLinks = [
   { label:'Instagram', url:'https://www.instagram.com/entreletrasymatcha/', svg: igSvg },
   { label:'TikTok',    url:'https://www.tiktok.com/@entreletrasymatcha',    svg: ttSvg },
   { label:'Pinterest', url:'https://cl.pinterest.com/entreletrasymatcha/',  svg: piSvg },
-  { label:'Goodreads', url:'https://www.goodreads.com/aracellyramirez',     svg: grSvg },
+  { label:'Goodreads', url:'https://www.goodreads.com/ariramirez',     svg: grSvg },
   { label:'Amazon',    url:'https://www.amazon.com/gp/profile/amzn1.account.AF45XGBVNW75DS3DJIVHUIHJF67Q', svg: amSvg },
 ]
 
