@@ -543,7 +543,14 @@ function ItemCard({ item, activeTag, handleTag }) {
   // Rincón
   if (item.type === 'rincon') {
     const et = entryTypes[item.entrytype] || entryTypes.reflexion
-    const rinconImg = item.imagen ? item.imagen.split('|').filter(Boolean)[0] : null
+    const imagenes = Array.isArray(item.imagenes)
+      ? item.imagenes
+      : (item.imagen || '').split('|').map(s => s.trim()).filter(Boolean)
+    // Una Lista con 2 o más imágenes en "Imagen URL" muestra la fila de portaditas.
+    // Con 0 o 1 imagen se ve como cualquier otra entrada del rincón.
+    const esLista = item.entrytype === 'lista' && imagenes.length >= 2
+    const rinconImg = !esLista && imagenes.length > 0 ? imagenes[0] : null
+    const etiqueta = esLista ? `${et.label} · ${imagenes.length} libros` : et.label
     const tags = Array.isArray(item.tags) ? item.tags : (item.tags||'').split(',').map(t=>t.trim()).filter(Boolean)
     return (
       <Link href={`/rincon/${item.slug}`} style={{ textDecoration:'none' }}>
@@ -551,16 +558,31 @@ function ItemCard({ item, activeTag, handleTag }) {
           display:'grid', gridTemplateColumns: rinconImg ? '80px 1fr' : '1fr', gap:14, transition:'opacity 0.15s' }}
           onMouseEnter={e=>e.currentTarget.style.opacity='0.85'} onMouseLeave={e=>e.currentTarget.style.opacity='1'}>
           {rinconImg && <img src={rinconImg} alt={item.titulo} style={{ width:80, height:115, objectFit:'cover', borderRadius:6, border:`1px solid ${et.border}` }} />}
-          <div>
+          <div style={{ minWidth:0 }}>
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
               <div style={{ display:'flex', gap:8, alignItems:'center' }}>
-                <Pill bg="#fff" color={et.color} border={et.border}>{et.label}</Pill>
+                <Pill bg="#fff" color={et.color} border={et.border}>{etiqueta}</Pill>
                 <span style={{ fontSize:11, color:et.color, fontFamily:'sans-serif', opacity:0.8 }}>Desde mi rincón</span>
               </div>
               <span style={{ fontSize:11, color:et.color, fontFamily:'sans-serif', opacity:0.7 }}>{item.fecha}</span>
             </div>
             <h3 style={{ fontSize:16, fontWeight:700, margin:'0 0 6px', color:'var(--text-dark)' }}>{item.titulo}</h3>
             <p style={{ fontSize:13, color:'var(--text-body)', lineHeight:1.65, margin:'0 0 10px', display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden', fontStyle: item.entrytype==='cita' ? 'italic' : 'normal' }}>{item.preview}</p>
+
+            {/* 📚 Fila de portaditas numeradas, mismo estilo que las órdenes */}
+            {esLista && (
+              <div style={{ display:'flex', gap:6, margin:'0 0 12px', overflowX:'auto' }}>
+                {imagenes.slice(0, 8).map((img, i) => (
+                  <div key={i} style={{ flexShrink:0, position:'relative' }}>
+                    <img src={img} alt={`${item.titulo}, libro ${i+1}`} loading="lazy"
+                      style={{ width:44, height:64, objectFit:'cover', borderRadius:4, border:`1px solid ${et.border}`, display:'block' }}
+                      onError={e => { e.target.style.background='#fff'; e.target.src='' }} />
+                    <span style={{ position:'absolute', top:2, left:2, background:et.color, color:'#fff', fontSize:9, fontFamily:'sans-serif', borderRadius:3, padding:'1px 4px', fontWeight:700 }}>{i+1}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
             <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
               <div style={{ display:'flex', flexWrap:'wrap', gap:5 }}>
                 {tags.map(tag => (
@@ -572,7 +594,7 @@ function ItemCard({ item, activeTag, handleTag }) {
                   </span>
                 ))}
               </div>
-              <span style={{ fontSize:12, color:et.color, fontFamily:'sans-serif' }}>Leer más →</span>
+              <span style={{ fontSize:12, color:et.color, fontFamily:'sans-serif', whiteSpace:'nowrap' }}>{esLista ? 'Ver la lista →' : 'Leer más →'}</span>
             </div>
           </div>
         </div>
