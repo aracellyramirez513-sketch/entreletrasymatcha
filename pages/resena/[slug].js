@@ -251,9 +251,9 @@ export default function DetalleLibro({ libro, slug, contexto }) {
             <div style={{ marginBottom:'1.5rem' }}>
               <p style={{ fontSize:11, fontFamily:'sans-serif', textTransform:'uppercase', letterSpacing:'0.1em', color:'var(--text-muted)', margin:'0 0 0.75rem' }}>¿Dónde comprarlo?</p>
               <div style={{ display:'flex', gap:10, flexWrap:'wrap' }}>
-                {libro.link_amazon && <a href={libro.link_amazon} target="_blank" rel="noopener noreferrer" style={{ padding:'8px 16px', borderRadius:8, background:'#fff8e7', border:'1px solid #f0c060', color:'#b07800', fontSize:13, fontFamily:'sans-serif', textDecoration:'none', fontWeight:500 }}>Amazon</a>}
-                {libro.link_buscalibre && <a href={libro.link_buscalibre} target="_blank" rel="noopener noreferrer" style={{ padding:'8px 16px', borderRadius:8, background:'#e7f5ff', border:'1px solid #60a0d0', color:'#0060a0', fontSize:13, fontFamily:'sans-serif', textDecoration:'none', fontWeight:500 }}>Buscalibre</a>}
-                {libro.link_mercadolibre && <a href={libro.link_mercadolibre} target="_blank" rel="noopener noreferrer" style={{ padding:'8px 16px', borderRadius:8, background:'#fff8e0', border:'1px solid #e0b800', color:'#806800', fontSize:13, fontFamily:'sans-serif', textDecoration:'none', fontWeight:500 }}>Mercado Libre</a>}
+                {libro.link_amazon && <a href={libro.link_amazon} target="_blank" rel="sponsored noopener noreferrer" style={{ padding:'8px 16px', borderRadius:8, background:'#fff8e7', border:'1px solid #f0c060', color:'#b07800', fontSize:13, fontFamily:'sans-serif', textDecoration:'none', fontWeight:500 }}>Amazon</a>}
+                {libro.link_buscalibre && <a href={libro.link_buscalibre} target="_blank" rel="sponsored noopener noreferrer" style={{ padding:'8px 16px', borderRadius:8, background:'#e7f5ff', border:'1px solid #60a0d0', color:'#0060a0', fontSize:13, fontFamily:'sans-serif', textDecoration:'none', fontWeight:500 }}>Buscalibre</a>}
+                {libro.link_mercadolibre && <a href={libro.link_mercadolibre} target="_blank" rel="sponsored noopener noreferrer" style={{ padding:'8px 16px', borderRadius:8, background:'#fff8e0', border:'1px solid #e0b800', color:'#806800', fontSize:13, fontFamily:'sans-serif', textDecoration:'none', fontWeight:500 }}>Mercado Libre</a>}
               </div>
             </div>
           )}
