@@ -218,12 +218,12 @@ function LibroCard({ libro, index }) {
             </Link>
           )}
           {libro.link_amazon && (
-            <a href={libro.link_amazon} target="_blank" rel="noopener noreferrer" style={{ padding:'5px 12px', borderRadius:6, background:'#fff8e7', border:'1px solid #f0c060', color:'#b07800', fontSize:12, fontFamily:'sans-serif', textDecoration:'none', fontWeight:500 }}>
+            <a href={libro.link_amazon} target="_blank" rel="sponsored noopener noreferrer" style={{ padding:'5px 12px', borderRadius:6, background:'#fff8e7', border:'1px solid #f0c060', color:'#b07800', fontSize:12, fontFamily:'sans-serif', textDecoration:'none', fontWeight:500 }}>
               Amazon
             </a>
           )}
           {libro.link_buscalibre && (
-            <a href={libro.link_buscalibre} target="_blank" rel="noopener noreferrer" style={{ padding:'5px 12px', borderRadius:6, background:'#e7f5ff', border:'1px solid #60a0d0', color:'#0060a0', fontSize:12, fontFamily:'sans-serif', textDecoration:'none', fontWeight:500 }}>
+            <a href={libro.link_buscalibre} target="_blank" rel="sponsored noopener noreferrer" style={{ padding:'5px 12px', borderRadius:6, background:'#e7f5ff', border:'1px solid #60a0d0', color:'#0060a0', fontSize:12, fontFamily:'sans-serif', textDecoration:'none', fontWeight:500 }}>
               Buscalibre
             </a>
           )}
