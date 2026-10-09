@@ -46,6 +46,7 @@ export function Pill({ children, bg, color, border, cat }) {
 
 // ─── Social Button ───────────────────────────────────────────────────────────
 const igSvg = <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x={2} y={2} width={20} height={20} rx={5}/><circle cx={12} cy={12} r={5}/><circle cx={17.5} cy={6.5} r={1} fill="currentColor" stroke="none"/></svg>
+const fbSvg = <svg width={18} height={18} viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.5h-2.8V24C19.62 23.1 24 18.1 24 12.07z"/></svg>
 const ttSvg = <svg width={18} height={18} viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/></svg>
 const piSvg = <svg width={18} height={18} viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.29-.09-.78-.17-1.98.04-2.83.18-.77 1.22-5.17 1.22-5.17s-.31-.62-.31-1.54c0-1.45.84-2.53 1.88-2.53.89 0 1.32.67 1.32 1.47 0 .89-.57 2.23-.86 3.47-.25 1.04.51 1.88 1.53 1.88 1.83 0 3.24-1.93 3.24-4.72 0-2.47-1.77-4.19-4.31-4.19-2.93 0-4.65 2.2-4.65 4.47 0 .88.34 1.83.76 2.35.08.1.09.19.07.29-.08.32-.25 1.04-.28 1.18-.04.19-.14.23-.32.14-1.19-.55-1.93-2.3-1.93-3.7 0-3.01 2.19-5.78 6.31-5.78 3.31 0 5.88 2.36 5.88 5.51 0 3.29-2.07 5.93-4.95 5.93-.97 0-1.87-.5-2.18-1.09l-.59 2.21c-.21.82-.79 1.84-1.18 2.46.89.27 1.83.42 2.81.42 5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
 const grSvg = <svg width={18} height={18} viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm.44 14.77c-2.07 0-3.5-1.06-3.6-2.93h1.18c.13 1.09 1.06 1.87 2.43 1.87 1.6 0 2.55-1 2.55-2.77V11.8h-.04a3.07 3.07 0 0 1-2.77 1.55c-2.28 0-3.73-1.76-3.73-4.08 0-2.4 1.5-4.2 3.76-4.2 1.17 0 2.2.57 2.77 1.57h.03V5.25h1.12v7.62c0 2.35-1.3 3.9-3.7 3.9zm.1-5.38c1.73 0 2.62-1.38 2.62-2.97 0-1.65-.9-3.07-2.62-3.07-1.66 0-2.57 1.4-2.57 3.08 0 1.62.9 2.96 2.57 2.96z"/></svg>
@@ -53,6 +54,7 @@ const amSvg = <svg width={18} height={18} viewBox="0 0 24 24" fill="currentColor
 
 const socialLinks = [
   { label:'Instagram', url:'https://www.instagram.com/entreletrasymatcha/', svg: igSvg },
+  { label:'Facebook',  url:'https://www.facebook.com/profile.php?id=61595174824204', svg: fbSvg },
   { label:'TikTok',    url:'https://www.tiktok.com/@entreletrasymatcha',    svg: ttSvg },
   { label:'Pinterest', url:'https://cl.pinterest.com/entreletrasymatcha/',  svg: piSvg },
   { label:'Goodreads', url:'https://www.goodreads.com/user/show/134562199-ari',     svg: grSvg },
