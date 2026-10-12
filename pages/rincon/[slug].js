@@ -10,6 +10,12 @@ const entryTypes = {
   noticia:     { label:'Noticia literaria', color:'#3a6a7a', bg:'#e4f0f5', border:'#aacfda' },
   lista:       { label:'Lista',            color:'#5a7a50', bg:'#e8ede3', border:'#b0c8a0' },
   cita:        { label:'Cita',             color:'#7a5080', bg:'#f0e8f5', border:'#c8aad4' },
+  // Datos literarios: glosarios, guías y curiosidades del mundo lector.
+  // Van varias llaves porque la normalización del tipo puede dejar
+  // "datos", "datos literarios" o "datos-literarios".
+  datos:                { label:'Datos literarios', color:'#8a5468', bg:'#f7eaef', border:'#dcb3c2' },
+  'datos literarios':   { label:'Datos literarios', color:'#8a5468', bg:'#f7eaef', border:'#dcb3c2' },
+  'datos-literarios':   { label:'Datos literarios', color:'#8a5468', bg:'#f7eaef', border:'#dcb3c2' },
 }
 
 const SITIO = 'Entre letras y matcha'
