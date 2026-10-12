@@ -8,6 +8,8 @@ const entryTypes = {
   reflexion:   { label:'Reflexión',        color:'#7a6a50', bg:'#f5ede4', border:'#d4bfaa' },
   'reflexión': { label:'Reflexión',        color:'#7a6a50', bg:'#f5ede4', border:'#d4bfaa' },
   noticia:     { label:'Noticia literaria', color:'#3a6a7a', bg:'#e4f0f5', border:'#aacfda' },
+  // Notion entrega el tipo en minúsculas con el nombre completo ("noticia literaria")
+  'noticia literaria': { label:'Noticia literaria', color:'#3a6a7a', bg:'#e4f0f5', border:'#aacfda' },
   lista:       { label:'Lista',            color:'#5a7a50', bg:'#e8ede3', border:'#b0c8a0' },
   cita:        { label:'Cita',             color:'#7a5080', bg:'#f0e8f5', border:'#c8aad4' },
   // Datos literarios: glosarios, guías y curiosidades del mundo lector.
@@ -71,6 +73,20 @@ function etiquetaBoton(texto, url) {
   if (!t || /^https?:\/\//i.test(t)) return etiquetaTienda(url)
   return t
 }
+
+// Los avisos del inicio (párrafos que parten con ⚠️) quedan sobre la portada
+// flotante; la portada se ubica junto a los párrafos que vienen después.
+function separarAvisos(bloques) {
+  let i = 0
+  while (i < bloques.length && bloques[i].tipo === 'paragraph' && /^\s*⚠/.test(textoPlano(bloques[i].texto))) i++
+  return { avisos: bloques.slice(0, i), resto: bloques.slice(i) }
+}
+
+// Portada chica al costado de la introducción, solo en Datos literarios
+const estiloPortadaDatos = `
+  .portada-datos { float:right; width:150px; aspect-ratio:4/5; object-fit:cover; border-radius:8px; margin:4px 0 12px 18px; }
+  @media (max-width: 520px) { .portada-datos { width:110px; margin-left:14px; } }
+`
 
 function separarImagenes(str) {
   return String(str || '').split('|').map(s => s.trim()).filter(Boolean)
@@ -228,9 +244,9 @@ function Bloque({ b, et, alt, cursiva, compacto }) {
     }
     case 'heading_1':
     case 'heading_2':
-      return <h2 style={{ fontSize:21, fontWeight:700, color:'var(--text-dark)', lineHeight:1.3, margin:'1.75rem 0 0.75rem' }}><Texto segs={b.texto} et={et} /></h2>
+      return <h2 style={{ fontSize:21, fontWeight:700, color:'var(--text-dark)', lineHeight:1.3, margin:'1.75rem 0 0.75rem', clear:'both' }}><Texto segs={b.texto} et={et} /></h2>
     case 'heading_3':
-      return <h3 style={{ fontSize:18, fontWeight:700, color:'var(--text-dark)', lineHeight:1.3, margin:'1.5rem 0 0.5rem' }}><Texto segs={b.texto} et={et} /></h3>
+      return <h3 style={{ fontSize:18, fontWeight:700, color:'var(--text-dark)', lineHeight:1.3, margin:'1.5rem 0 0.5rem', clear:'both' }}><Texto segs={b.texto} et={et} /></h3>
     case 'image': {
       const caption = textoPlano(b.caption)
       return (
@@ -333,6 +349,7 @@ export default function DetallePost({ post, slug }) {
 
   const et = entryTypes[post.entrytype] || entryTypes.reflexion
   const esCita = post.entrytype === 'cita'
+  const esDatos = et.label === 'Datos literarios'
   const bloques = Array.isArray(post.bloques) ? post.bloques : []
   const tieneCuerpo = bloques.length > 0
   const imagenes = Array.isArray(post.imagenes) ? post.imagenes : separarImagenes(post.imagen)
@@ -345,7 +362,9 @@ export default function DetallePost({ post, slug }) {
 
   // La grilla de arriba solo aparece si las imágenes no están ya en el cuerpo
   const cuerpoTieneImagenes = bloques.some(b => b.tipo === 'image')
-  const mostrarGrilla = imagenes.length > 0 && !conTarjetas && !cuerpoTieneImagenes
+  // En Datos literarios la portada va al costado de la introducción, no arriba
+  const portadaAlCostado = esDatos && imagenes.length > 0 && tieneCuerpo && !cuerpoTieneImagenes
+  const mostrarGrilla = imagenes.length > 0 && !conTarjetas && !cuerpoTieneImagenes && !portadaAlCostado
 
   const etiqueta = conTarjetas ? `${et.label} · ${numLibros} ${numLibros === 1 ? 'libro' : 'libros'}` : et.label
 
@@ -401,6 +420,21 @@ export default function DetallePost({ post, slug }) {
                 {lista.libros.map((libro, i) => <TarjetaLibro key={libro.id} libro={libro} numero={i + 1} et={et} />)}
               </div>
               {lista.cierre.length > 0 && <Bloques bloques={lista.cierre} et={et} alt={post.titulo} />}
+            </div>
+          ) : portadaAlCostado ? (
+            <div style={{ background:et.bg, border:`1px solid ${et.border}`, borderLeft:`4px solid ${et.color}`, borderRadius:12, padding:'1.5rem', overflow:'hidden' }}>
+              <style>{estiloPortadaDatos}</style>
+              {(() => {
+                const { avisos, resto } = separarAvisos(bloques)
+                return (
+                  <>
+                    {avisos.length > 0 && <Bloques bloques={avisos} et={et} alt={post.titulo} />}
+                    <img className="portada-datos" src={imagenes[0]} alt={`Portada de ${post.titulo}`}
+                      style={{ border:`1px solid ${et.border}` }} />
+                    <Bloques bloques={resto} et={et} alt={post.titulo} />
+                  </>
+                )
+              })()}
             </div>
           ) : tieneCuerpo ? (
             <div style={{ background:et.bg, border:`1px solid ${et.border}`, borderLeft:`4px solid ${et.color}`, borderRadius:12, padding:'1.5rem' }}>
