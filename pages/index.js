@@ -10,6 +10,10 @@ const entryTypes = {
   noticia:     { label:'Noticia literaria',color:'#3a6a7a', bg:'#e4f0f5', border:'#aacfda' },
   lista:       { label:'Lista',           color:'#5a7a50', bg:'#e8ede3', border:'#b0c8a0' },
   cita:        { label:'Cita',            color:'#7a5080', bg:'#f0e8f5', border:'#c8aad4' },
+  // Datos literarios: glosarios, guías y curiosidades del mundo lector
+  datos:              { label:'Datos literarios', color:'#8a5468', bg:'#f7eaef', border:'#dcb3c2' },
+  'datos literarios': { label:'Datos literarios', color:'#8a5468', bg:'#f7eaef', border:'#dcb3c2' },
+  'datos-literarios': { label:'Datos literarios', color:'#8a5468', bg:'#f7eaef', border:'#dcb3c2' },
 }
 const visualTypes = { manga:'Manga', manhwa:'Manhwa', manhua:'Manhua', 'cómic':'Cómic', comic:'Cómic' }
 const statusColors = {
@@ -78,6 +82,9 @@ const rinconFilterColors = {
   'noticia':     { bg: '#e4f0f5', color: '#3a6a7a' },
   'lista':       { bg: '#e8ede3', color: '#5a7a50' },
   'cita':        { bg: '#f0e8f5', color: '#7a5080' },
+  'datos':            { bg: '#f7eaef', color: '#8a5468' },
+  'datos literarios': { bg: '#f7eaef', color: '#8a5468' },
+  'datos-literarios': { bg: '#f7eaef', color: '#8a5468' },
 }
 const rinconFilterFallback = { bg: '#f5ede4', color: '#7a6a50' }
 
