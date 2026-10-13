@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useState, useMemo, useEffect } from 'react'
 import { getTodo } from '../lib/notion'
-import { Stars, Pill, SiteHeader, Perfil, Sidebar, Newsletter, Footer } from '../components/ui'
+import { Stars, Pill, SiteHeader, Perfil, Sidebar, Newsletter, Footer, TiendaFranja } from '../components/ui'
 
 const entryTypes = {
   reflexion:   { label:'Reflexión',       color:'#7a6a50', bg:'#f5ede4', border:'#d4bfaa' },
@@ -242,6 +242,9 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
         {!isFiltered && librosFavoritos.length > 0 && (
           <FavoritosRow libros={librosFavoritos} />
         )}
+
+        {/* 🛍️ Tienda — entre favoritos y filtros */}
+        {!isFiltered && <TiendaFranja />}
 
         <div style={{ padding:'1.5rem 0 1rem' }}>
           {/* Filtros de tipo con emojis y colores propios */}
