@@ -126,48 +126,20 @@ export function Sidebar({ leyendo, search, setSearch, activeTag, allTags, handle
         <p style={{ fontSize:11, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--text-muted)', margin:'0 0 0.75rem', fontFamily:'sans-serif' }}>🌌 Universos literarios</p>
         <Link href="/universos-literarios" style={{ textDecoration:'none' }}>
           <div style={{
-            background:'#e6efe7',
-            border:'1px solid #8fb996',
+            background:'#EEEDFE',
+            border:'1px solid #AFA9EC',
             borderRadius:10,
             padding:'0.75rem',
             cursor:'pointer',
             transition:'transform 0.15s, box-shadow 0.15s'
           }}
-          onMouseEnter={e => { e.currentTarget.style.transform='translateY(-1px)'; e.currentTarget.style.boxShadow='0 3px 10px rgba(48, 84, 53, 0.14)' }}
+          onMouseEnter={e => { e.currentTarget.style.transform='translateY(-1px)'; e.currentTarget.style.boxShadow='0 3px 10px rgba(60, 52, 137, 0.15)' }}
           onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='none' }}>
-            <p style={{ fontSize:12, color:'#2c4430', lineHeight:1.5, margin:'0 0 8px' }}>
+            <p style={{ fontSize:12, color:'#26215C', lineHeight:1.5, margin:'0 0 8px' }}>
               Explora los mundos donde las series se conectan entre sí.
             </p>
-            <span style={{ fontSize:11, color:'#305435', fontFamily:'sans-serif', fontWeight:600 }}>
+            <span style={{ fontSize:11, color:'#3C3489', fontFamily:'sans-serif', fontWeight:600 }}>
               Ver todos →
-            </span>
-          </div>
-        </Link>
-        <div style={{ borderTop:'1px solid var(--border)', margin:'1rem 0 0.75rem' }} />
-      </div>
-
-      {/* 🛍️ Tienda — bajo Universos */}
-      <div style={{ marginBottom:'1.25rem' }}>
-        <p style={{ fontSize:11, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--text-muted)', margin:'0 0 0.75rem', fontFamily:'sans-serif' }}>🛍️ Tienda</p>
-        <Link href="/tienda" style={{ textDecoration:'none' }}>
-          <div style={{
-            background: TC.fondo,
-            border:`1px solid ${TC.borde}`,
-            borderRadius:10,
-            padding:'0.75rem',
-            cursor:'pointer',
-            transition:'transform 0.15s, box-shadow 0.15s'
-          }}
-          onMouseEnter={e => { e.currentTarget.style.transform='translateY(-1px)'; e.currentTarget.style.boxShadow=`0 3px 10px ${TC.sombra}` }}
-          onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='none' }}>
-            <p style={{ fontSize:13, fontWeight:700, color:'var(--text-dark)', lineHeight:1.3, margin:'0 0 4px', fontFamily:'Georgia,serif' }}>
-              Diario Lector de Romance
-            </p>
-            <p style={{ fontSize:12, color:'var(--text-body)', lineHeight:1.5, margin:'0 0 8px' }}>
-              Mis plantillas para llevar tus lecturas, en Notion y GoodNotes.
-            </p>
-            <span style={{ fontSize:11, color:TC.acento, fontFamily:'sans-serif', fontWeight:600 }}>
-              Ver en la tienda →
             </span>
           </div>
         </Link>
@@ -223,6 +195,29 @@ export function Sidebar({ leyendo, search, setSearch, activeTag, allTags, handle
         </button>
       )}
     </div>
+  )
+}
+
+// ─── Franja de la Tienda (inicio, entre favoritos y filtros) ─────────────────
+export function TiendaFranja() {
+  return (
+    <Link href="/tienda" style={{ textDecoration:'none', display:'block', marginTop:'1.5rem' }}>
+      <div style={{ background:TC.fondo, border:`1px solid ${TC.borde}`, borderRadius:12, padding:'1rem 1.25rem', display:'flex', alignItems:'center', gap:16, flexWrap:'wrap', cursor:'pointer', transition:'transform 0.15s, box-shadow 0.15s' }}
+        onMouseEnter={e => { e.currentTarget.style.transform='translateY(-1px)'; e.currentTarget.style.boxShadow=`0 3px 10px ${TC.sombra}` }}
+        onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='none' }}>
+        <div style={{ width:48, height:48, flexShrink:0, background:'#fff', border:`1px solid ${TC.borde}`, borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', fontSize:24 }}>
+          🛍️
+        </div>
+        <div style={{ flex:'1 1 240px', minWidth:0 }}>
+          <p style={{ fontSize:11, fontFamily:'sans-serif', fontWeight:600, letterSpacing:'0.1em', textTransform:'uppercase', color:TC.acento, margin:'0 0 2px' }}>Nuevo en la tienda</p>
+          <p style={{ fontSize:16, fontWeight:700, lineHeight:1.3, color:'var(--text-dark)', margin:'0 0 2px', fontFamily:'Georgia,serif' }}>Diario Lector de Romance</p>
+          <p style={{ fontSize:13, lineHeight:1.5, color:'var(--text-body)', margin:0 }}>En Notion o para escribir a mano en GoodNotes, hecho con el mismo sistema de mis reseñas.</p>
+        </div>
+        <span style={{ display:'inline-flex', alignItems:'center', minHeight:40, padding:'0 16px', background:TC.boton, color:'#fff', borderRadius:20, fontFamily:'sans-serif', fontSize:13, fontWeight:500, flexShrink:0 }}>
+          Ver los diarios →
+        </span>
+      </div>
+    </Link>
   )
 }
 
