@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
+import { TIENDA_COLORES as TC } from '../lib/productos'
 
 // ─── Stars ───────────────────────────────────────────────────────────────────
 export function Stars({ n, size = 13 }) {
@@ -145,6 +146,34 @@ export function Sidebar({ leyendo, search, setSearch, activeTag, allTags, handle
         <div style={{ borderTop:'1px solid var(--border)', margin:'1rem 0 0.75rem' }} />
       </div>
 
+      {/* 🛍️ Tienda — bajo Universos */}
+      <div style={{ marginBottom:'1.25rem' }}>
+        <p style={{ fontSize:11, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--text-muted)', margin:'0 0 0.75rem', fontFamily:'sans-serif' }}>🛍️ Tienda</p>
+        <Link href="/tienda" style={{ textDecoration:'none' }}>
+          <div style={{
+            background: TC.fondo,
+            border:`1px solid ${TC.borde}`,
+            borderRadius:10,
+            padding:'0.75rem',
+            cursor:'pointer',
+            transition:'transform 0.15s, box-shadow 0.15s'
+          }}
+          onMouseEnter={e => { e.currentTarget.style.transform='translateY(-1px)'; e.currentTarget.style.boxShadow=`0 3px 10px ${TC.sombra}` }}
+          onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='none' }}>
+            <p style={{ fontSize:13, fontWeight:700, color:'var(--text-dark)', lineHeight:1.3, margin:'0 0 4px', fontFamily:'Georgia,serif' }}>
+              Diario Lector de Romance
+            </p>
+            <p style={{ fontSize:12, color:'var(--text-body)', lineHeight:1.5, margin:'0 0 8px' }}>
+              Mis plantillas para llevar tus lecturas, en Notion y GoodNotes.
+            </p>
+            <span style={{ fontSize:11, color:TC.acento, fontFamily:'sans-serif', fontWeight:600 }}>
+              Ver en la tienda →
+            </span>
+          </div>
+        </Link>
+        <div style={{ borderTop:'1px solid var(--border)', margin:'1rem 0 0.75rem' }} />
+      </div>
+
       {leyendo?.length > 0 && (
         <div style={{ marginBottom:'1.25rem' }}>
           <p style={{ fontSize:11, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--text-muted)', margin:'0 0 0.75rem', fontFamily:'sans-serif' }}>Actualmente leyendo</p>
@@ -193,6 +222,25 @@ export function Sidebar({ leyendo, search, setSearch, activeTag, allTags, handle
           Limpiar filtros ✕
         </button>
       )}
+    </div>
+  )
+}
+
+// ─── Bloque de la Tienda (al final de cada reseña) ───────────────────────────
+export function TiendaBanner() {
+  return (
+    <div style={{ border:'1px solid var(--border)', borderRadius:12, padding:'1.25rem', margin:'0 0 1.5rem', display:'flex', gap:16, alignItems:'center', flexWrap:'wrap' }}>
+      <div style={{ width:64, height:64, flexShrink:0, background:TC.fondo, border:`1px solid ${TC.borde}`, borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', fontSize:28 }}>
+        📖
+      </div>
+      <div style={{ flex:'1 1 260px', minWidth:0 }}>
+        <p style={{ fontSize:11, fontFamily:'sans-serif', fontWeight:600, letterSpacing:'0.1em', textTransform:'uppercase', color:TC.acento, margin:'0 0 4px' }}>De la tienda</p>
+        <p style={{ fontSize:17, fontWeight:700, lineHeight:1.3, color:'var(--text-dark)', margin:'0 0 4px' }}>¿Quieres llevar tus lecturas como yo llevo las mías?</p>
+        <p style={{ fontSize:14, lineHeight:1.6, color:'var(--text-body)', margin:'0 0 10px' }}>Mi Diario Lector de Romance, en versión Notion o para escribir a mano en GoodNotes.</p>
+        <Link href="/tienda" style={{ display:'inline-flex', alignItems:'center', minHeight:40, padding:'0 16px', border:`1px solid ${TC.borde}`, color:TC.acento, borderRadius:20, fontFamily:'sans-serif', fontSize:13, textDecoration:'none', fontWeight:500 }}>
+          Conocer los diarios →
+        </Link>
+      </div>
     </div>
   )
 }
