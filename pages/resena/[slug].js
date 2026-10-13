@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { getLibros, getLibro, getContextoSerie } from '../../lib/notion'
-import { Stars, Pill, SiteHeader, Newsletter, Footer } from '../../components/ui'
+import { Stars, Pill, SiteHeader, Newsletter, Footer, TiendaBanner } from '../../components/ui'
 import Comentarios from '../../components/Comentarios'
 
 // Convierte el texto plano que viene de Notion en párrafos reales.
@@ -260,6 +260,9 @@ export default function DetalleLibro({ libro, slug, contexto }) {
 
           {/* Navegación de la serie */}
           <NavSerie contexto={contexto} />
+
+          {/* Tienda */}
+          <TiendaBanner />
 
           {/* Comentarios */}
           <Comentarios slug={slug} />
