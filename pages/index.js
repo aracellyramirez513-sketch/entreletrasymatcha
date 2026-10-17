@@ -8,7 +8,9 @@ const entryTypes = {
   reflexion:   { label:'Reflexión',       color:'#7a6a50', bg:'#f5ede4', border:'#d4bfaa' },
   'reflexión': { label:'Reflexión',       color:'#7a6a50', bg:'#f5ede4', border:'#d4bfaa' },
   noticia:     { label:'Noticia literaria',color:'#3a6a7a', bg:'#e4f0f5', border:'#aacfda' },
-  lista:       { label:'Lista',           color:'#5a7a50', bg:'#e8ede3', border:'#b0c8a0' },
+  // Notion entrega el tipo en minúsculas con el nombre completo ("noticia literaria")
+  'noticia literaria': { label:'Noticia literaria', color:'#3a6a7a', bg:'#e4f0f5', border:'#aacfda' },
+  lista:      { label:'Lista',           color:'#5a7a50', bg:'#e8ede3', border:'#b0c8a0' },
   cita:        { label:'Cita',            color:'#7a5080', bg:'#f0e8f5', border:'#c8aad4' },
   // Datos literarios: glosarios, guías y curiosidades del mundo lector
   datos:              { label:'Datos literarios', color:'#8a5468', bg:'#f7eaef', border:'#dcb3c2' },
@@ -83,6 +85,7 @@ const rinconFilterColors = {
   'reflexion':   { bg: '#f5ede4', color: '#7a6a50' },
   'reflexión':   { bg: '#f5ede4', color: '#7a6a50' },
   'noticia':     { bg: '#e4f0f5', color: '#3a6a7a' },
+  'noticia literaria': { bg: '#e4f0f5', color: '#3a6a7a' },
   'lista':       { bg: '#e8ede3', color: '#5a7a50' },
   'cita':        { bg: '#f0e8f5', color: '#7a5080' },
   'datos':            { bg: '#f7eaef', color: '#8a5468' },
