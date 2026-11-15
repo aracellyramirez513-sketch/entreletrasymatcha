@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { getVinetas, getVineta } from '../../lib/notion'
 import { Stars, Pill, SiteHeader, Newsletter, Footer } from '../../components/ui'
+import { recortar } from '../../lib/seo'
 
 const visualTypes = { manga:'Manga', manhwa:'Manhwa', manhua:'Manhua', 'cómic':'Cómic', comic:'Cómic' }
 const statusColors = {
@@ -35,7 +36,7 @@ export default function DetalleVineta({ vineta }) {
   const tags = Array.isArray(vineta.tags) ? vineta.tags : (vineta.tags||'').split(',').map(t=>t.trim()).filter(Boolean)
   const tipo = visualTypes[vineta.visualtype] || ''
   const tituloSEO = `${vineta.titulo}: ${tipo ? `reseña del ${tipo.toLowerCase()}` : 'reseña'} | Entre letras y matcha`
-  const descripcionSEO = vineta.sinopsis?.slice(0,160)
+  const descripcionSEO = recortar(vineta.sinopsis)
 
   return (
     <>

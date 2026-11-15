@@ -84,16 +84,19 @@ export function SocialBtn({ label, url, svg }) {
 }
 
 // ─── Header del sitio ────────────────────────────────────────────────────────
-export function SiteHeader() {
+// Solo el inicio usa el nombre del sitio como título principal (h1).
+// En las demás páginas el h1 es el título de la reseña, orden o post.
+export function SiteHeader({ principal = false }) {
+  const Titulo = principal ? 'h1' : 'div'
   return (
     <div style={{ textAlign:'center', padding:'3rem 1rem 2rem', borderBottom:'1px solid var(--border)' }}>
       <p style={{ fontSize:12, letterSpacing:'0.14em', color:'var(--text-muted)', margin:'0 0 0.75rem', fontFamily:'sans-serif', textTransform:'uppercase' }}>
         Lecturas · Matcha · Recomendaciones
       </p>
       <Link href="/">
-        <h1 style={{ fontFamily:"'Fraunces', serif", fontSize:'clamp(32px,6vw,48px)', fontWeight:700, margin:'0', lineHeight:1.2, color:'var(--text-dark)', whiteSpace:'nowrap', cursor:'pointer' }}>
+        <Titulo style={{ fontFamily:"'Fraunces', serif", fontSize:'clamp(32px,6vw,48px)', fontWeight:700, margin:'0', lineHeight:1.2, color:'var(--text-dark)', whiteSpace:'nowrap', cursor:'pointer' }}>
           Entre letras <span style={{ color:'var(--text-accent)' }}>y matcha</span>
-        </h1>
+        </Titulo>
       </Link>
     </div>
   )

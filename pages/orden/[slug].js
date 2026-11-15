@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getOrdenes, getOrden } from '../../lib/notion'
 import { Pill, SiteHeader, Newsletter, Footer } from '../../components/ui'
 import Comentarios from '../../components/Comentarios'
+import { recortar } from '../../lib/seo'
 
 const tipoOrdenInfo = {
   'Orden estricto':             { color: '#712B13', bg: '#FAECE7', border: '#F0997B', desc: 'Leer estrictamente en este orden — los libros se conectan directamente.' },
@@ -36,8 +37,9 @@ export default function DetalleOrden({ orden, slug }) {
 
   const saga = nombreSaga(orden.titulo)
   const sagaConAutor = orden.autor ? `${saga} de ${orden.autor}` : saga
-  const tituloSEO = `${sagaConAutor}: orden de lectura | Entre letras y matcha`
-  const descripcionSEO = `Orden de lectura de ${sagaConAutor}.${orden.descripcion ? ` ${orden.descripcion}` : ''}`
+  // Si en Notion están llenos "Título SEO" / "Descripción SEO", mandan esos.
+  const tituloSEO = orden.titulo_seo || `${sagaConAutor}: orden de lectura | Entre letras y matcha`
+  const descripcionSEO = orden.descripcion_seo || recortar(`Orden de lectura de ${sagaConAutor}.${orden.descripcion ? ` ${orden.descripcion}` : ''}`)
 
   return (
     <>

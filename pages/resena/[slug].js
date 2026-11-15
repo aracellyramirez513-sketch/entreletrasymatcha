@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { getLibros, getLibro, getContextoSerie } from '../../lib/notion'
 import { Stars, Pill, SiteHeader, Newsletter, Footer, TiendaBanner } from '../../components/ui'
 import Comentarios from '../../components/Comentarios'
+import { recortar } from '../../lib/seo'
 
 // Convierte el texto plano que viene de Notion en párrafos reales.
 // Notion guarda los saltos como \n y el HTML los colapsa, por eso hay que partirlos a mano.
@@ -147,9 +148,9 @@ export default function DetalleLibro({ libro, slug, contexto }) {
     <>
       <Head>
         <title>{tituloSEO}</title>
-        <meta name="description" content={libro.sinopsis?.slice(0,160)} />
+        <meta name="description" content={recortar(libro.sinopsis)} />
         <meta property="og:title" content={tituloSEO} />
-        <meta property="og:description" content={libro.sinopsis?.slice(0,160)} />
+        <meta property="og:description" content={recortar(libro.sinopsis)} />
         {libro.portada && <meta property="og:image" content={libro.portada} />}
       </Head>
 
