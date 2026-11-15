@@ -236,7 +236,7 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
       </Head>
 
       <div className="container">
-        <SiteHeader />
+        <SiteHeader principal />
         <Perfil />
 
         {!isFiltered && libroDestacado && (
