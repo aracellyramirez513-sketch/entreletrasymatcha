@@ -229,7 +229,7 @@ export default function Home({ libros, vinetas, rincon, leyendo, ordenes }) {
   return (
     <>
       <Head>
-        <title>Entre letras y matcha</title>
+        <title>Entre letras y matcha | Reseñas de dark romance, MM y romantasy</title>
         <meta name="description" content="Reseñas de romance, dark romance, romantasy y más. Lecturas honestas con un matcha cerca." />
         <meta property="og:title" content="Entre letras y matcha" />
         <meta property="og:description" content="Reseñas de romance, dark romance, romantasy y más." />
