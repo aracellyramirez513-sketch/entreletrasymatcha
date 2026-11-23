@@ -16,6 +16,10 @@ const entryTypes = {
   datos:              { label:'Datos literarios', color:'#8a5468', bg:'#f7eaef', border:'#dcb3c2' },
   'datos literarios': { label:'Datos literarios', color:'#8a5468', bg:'#f7eaef', border:'#dcb3c2' },
   'datos-literarios': { label:'Datos literarios', color:'#8a5468', bg:'#f7eaef', border:'#dcb3c2' },
+  // Con spoiler: pensamientos y teorías de un libro, para quienes ya lo leyeron
+  'con spoiler':  { label:'Con spoiler', color:'#9a4a2e', bg:'#f7e6dd', border:'#e2b8a4' },
+  'con-spoiler':  { label:'Con spoiler', color:'#9a4a2e', bg:'#f7e6dd', border:'#e2b8a4' },
+  'con spoilers': { label:'Con spoiler', color:'#9a4a2e', bg:'#f7e6dd', border:'#e2b8a4' },
 }
 const visualTypes = { manga:'Manga', manhwa:'Manhwa', manhua:'Manhua', 'cómic':'Cómic', comic:'Cómic' }
 const statusColors = {
@@ -46,7 +50,7 @@ const catConfig = [
 // (mismos tonos que usan los pills de categoría en las tarjetas)
 const catFilterColors = {
   'dark romance':          { bg: '#e7d0d6', color: '#67323f' },
-  'romantasy':             { bg: '#e0d0e7', color: '#573267' },
+  'romantasy':             { bg: '#f7e6dd', color: '#9a4a2e' },
   'mafia romance':         { bg: '#e7d9d0', color: '#674832' },
   'mafia':                 { bg: '#e7d9d0', color: '#674832' },
   'romance contemporáneo': { bg: '#d0e7d3', color: '#326739' },
@@ -91,6 +95,9 @@ const rinconFilterColors = {
   'datos':            { bg: '#f7eaef', color: '#8a5468' },
   'datos literarios': { bg: '#f7eaef', color: '#8a5468' },
   'datos-literarios': { bg: '#f7eaef', color: '#8a5468' },
+  'con spoiler':      { bg: '#f7e6dd', color: '#9a4a2e' },
+  'con-spoiler':      { bg: '#f7e6dd', color: '#9a4a2e' },
+  'con spoilers':     { bg: '#f7e6dd', color: '#9a4a2e' },
 }
 const rinconFilterFallback = { bg: '#f5ede4', color: '#7a6a50' }
 
