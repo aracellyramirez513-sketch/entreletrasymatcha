@@ -18,6 +18,11 @@ const entryTypes = {
   datos:                { label:'Datos literarios', color:'#8a5468', bg:'#f7eaef', border:'#dcb3c2' },
   'datos literarios':   { label:'Datos literarios', color:'#8a5468', bg:'#f7eaef', border:'#dcb3c2' },
   'datos-literarios':   { label:'Datos literarios', color:'#8a5468', bg:'#f7eaef', border:'#dcb3c2' },
+  // Con spoiler: pensamientos y teorías de un libro, para quienes ya lo leyeron.
+  // Notion entrega "con spoiler"; las otras llaves cubren variantes de escritura.
+  'con spoiler':        { label:'Con spoiler', color:'#9a4a2e', bg:'#f7e6dd', border:'#e2b8a4' },
+  'con-spoiler':        { label:'Con spoiler', color:'#9a4a2e', bg:'#f7e6dd', border:'#e2b8a4' },
+  'con spoilers':       { label:'Con spoiler', color:'#9a4a2e', bg:'#f7e6dd', border:'#e2b8a4' },
 }
 
 const SITIO = 'Entre letras y matcha'
@@ -82,10 +87,15 @@ function separarAvisos(bloques) {
   return { avisos: bloques.slice(0, i), resto: bloques.slice(i) }
 }
 
-// Portada chica al costado de la introducción, solo en Datos literarios
+// Portada chica al costado de la introducción: a la derecha en Datos literarios,
+// a la izquierda en Con spoiler
 const estiloPortadaDatos = `
   .portada-datos { float:right; width:150px; aspect-ratio:4/5; object-fit:cover; border-radius:8px; margin:4px 0 12px 18px; }
-  @media (max-width: 520px) { .portada-datos { width:110px; margin-left:14px; } }
+  .portada-datos.izquierda { float:left; margin:4px 18px 12px 0; }
+  @media (max-width: 520px) {
+    .portada-datos { width:110px; margin-left:14px; }
+    .portada-datos.izquierda { margin-left:0; margin-right:14px; }
+  }
 `
 
 function separarImagenes(str) {
@@ -350,6 +360,7 @@ export default function DetallePost({ post, slug }) {
   const et = entryTypes[post.entrytype] || entryTypes.reflexion
   const esCita = post.entrytype === 'cita'
   const esDatos = et.label === 'Datos literarios'
+  const esSpoiler = et.label === 'Con spoiler'
   const bloques = Array.isArray(post.bloques) ? post.bloques : []
   const tieneCuerpo = bloques.length > 0
   const imagenes = Array.isArray(post.imagenes) ? post.imagenes : separarImagenes(post.imagen)
@@ -362,8 +373,8 @@ export default function DetallePost({ post, slug }) {
 
   // La grilla de arriba solo aparece si las imágenes no están ya en el cuerpo
   const cuerpoTieneImagenes = bloques.some(b => b.tipo === 'image')
-  // En Datos literarios la portada va al costado de la introducción, no arriba
-  const portadaAlCostado = esDatos && imagenes.length > 0 && tieneCuerpo && !cuerpoTieneImagenes
+  // En Datos literarios y Con spoiler la portada va al costado de la introducción, no arriba
+  const portadaAlCostado = (esDatos || esSpoiler) && imagenes.length > 0 && tieneCuerpo && !cuerpoTieneImagenes
   const mostrarGrilla = imagenes.length > 0 && !conTarjetas && !cuerpoTieneImagenes && !portadaAlCostado
 
   const etiqueta = conTarjetas ? `${et.label} · ${numLibros} ${numLibros === 1 ? 'libro' : 'libros'}` : et.label
@@ -429,7 +440,7 @@ export default function DetallePost({ post, slug }) {
                 return (
                   <>
                     {avisos.length > 0 && <Bloques bloques={avisos} et={et} alt={post.titulo} />}
-                    <img className="portada-datos" src={imagenes[0]} alt={`Portada de ${post.titulo}`}
+                    <img className={esSpoiler ? 'portada-datos izquierda' : 'portada-datos'} src={imagenes[0]} alt={`Portada de ${post.titulo}`}
                       style={{ border:`1px solid ${et.border}` }} />
                     <Bloques bloques={resto} et={et} alt={post.titulo} />
                   </>
