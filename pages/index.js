@@ -818,31 +818,24 @@ function FavoritosAmazon({ libros }) {
         <h2 id="fav-amazon-titulo" style={{ margin:0, fontSize:23, fontWeight:'normal', color:'var(--text-dark)' }}>Mis favoritos de Amazon</h2>
         <p style={{ margin:0, fontSize:15, fontStyle:'italic', color:'var(--text-body)' }}>Mis cinco estrellas de siempre, listos para llevarte a casa.</p>
       </div>
-      {/* Máximo 2 columnas: así los 4 libros quedan en 2 filas parejas y
-          ninguno queda solo. En celular pasa a 1 columna. */}
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(min(100%, max(320px, 45%)), 1fr))', gap:16 }}>
+      {/* 4 libros en una fila en computador; 2x2 en celular. */}
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(min(100%, max(150px, 22%)), 1fr))', gap:12 }}>
         {libros.map(libro => (
-          <article key={libro.id} style={{ background:'var(--bg-card)', border:'1px solid #e4e0d6', borderRadius:12, padding:14, display:'flex', flexDirection:'column', gap:12 }}>
-            <div style={{ display:'flex', gap:14 }}>
-              {libro.portada && (
-                <img src={libro.portada} alt={libro.titulo} loading="lazy"
-                  style={{ width:84, height:126, objectFit:'cover', borderRadius:6, flexShrink:0, boxShadow:'0 2px 6px rgba(37,46,35,0.18)' }} />
-              )}
-              <div style={{ display:'flex', flexDirection:'column', gap:6, minWidth:0 }}>
-                {libro.categoria && <span style={{ alignSelf:'flex-start' }}><Pill cat>{libro.categoria}</Pill></span>}
-                <h3 style={{ margin:0, fontSize:16, fontWeight:'normal', lineHeight:1.25, color:'var(--text-dark)' }}>{libro.titulo}</h3>
-                <p style={{ margin:0, fontFamily:'sans-serif', fontSize:12, color:'var(--text-author)' }}>{libro.autor}</p>
-                {libro.calificacion ? <Stars n={libro.calificacion} /> : null}
-              </div>
-            </div>
-            <div style={{ display:'flex', gap:8 }}>
-              <a href={libro.link_amazon} target="_blank" rel="sponsored noopener noreferrer" style={{ ...btnAmazon, flex:1 }}>
-                Ver en Amazon
-              </a>
-              <Link href={`/resena/${libro.slug}`} style={{ fontFamily:'sans-serif', fontSize:13, textDecoration:'none', textAlign:'center', padding:'10px 14px', borderRadius:8, border:'1px solid var(--border-btn)', color:'var(--text-body)' }}>
-                Mi reseña
-              </Link>
-            </div>
+          <article key={libro.id} style={{ background:'var(--bg-card)', border:'1px solid #e4e0d6', borderRadius:12, padding:12, display:'flex', flexDirection:'column', alignItems:'center', gap:6, textAlign:'center' }}>
+            {libro.portada && (
+              <img src={libro.portada} alt={libro.titulo} loading="lazy"
+                style={{ width:96, height:144, objectFit:'cover', borderRadius:6, marginBottom:4, boxShadow:'0 2px 6px rgba(37,46,35,0.18)' }} />
+            )}
+            {libro.categoria && <Pill cat>{libro.categoria}</Pill>}
+            <h3 style={{ margin:0, fontSize:15, fontWeight:'normal', lineHeight:1.25, color:'var(--text-dark)' }}>{libro.titulo}</h3>
+            <p style={{ margin:0, fontFamily:'sans-serif', fontSize:12, color:'var(--text-author)' }}>{libro.autor}</p>
+            {libro.calificacion ? <Stars n={libro.calificacion} /> : null}
+            <a href={libro.link_amazon} target="_blank" rel="sponsored noopener noreferrer" style={{ ...btnAmazon, alignSelf:'stretch', marginTop:'auto', padding:'9px 10px' }}>
+              Ver en Amazon
+            </a>
+            <Link href={`/resena/${libro.slug}`} style={{ fontFamily:'sans-serif', fontSize:12, color:'var(--text-body)', textDecoration:'underline', textUnderlineOffset:3, padding:'8px 4px 2px' }}>
+              Mi reseña
+            </Link>
           </article>
         ))}
       </div>
