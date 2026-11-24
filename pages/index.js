@@ -818,7 +818,9 @@ function FavoritosAmazon({ libros }) {
         <h2 id="fav-amazon-titulo" style={{ margin:0, fontSize:23, fontWeight:'normal', color:'var(--text-dark)' }}>Mis favoritos de Amazon</h2>
         <p style={{ margin:0, fontSize:15, fontStyle:'italic', color:'var(--text-body)' }}>Mis cinco estrellas de siempre, listos para llevarte a casa.</p>
       </div>
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(min(230px, 100%), 1fr))', gap:16 }}>
+      {/* Máximo 2 columnas: así los 4 libros quedan en 2 filas parejas y
+          ninguno queda solo. En celular pasa a 1 columna. */}
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(min(100%, max(320px, 45%)), 1fr))', gap:16 }}>
         {libros.map(libro => (
           <article key={libro.id} style={{ background:'var(--bg-card)', border:'1px solid #e4e0d6', borderRadius:12, padding:14, display:'flex', flexDirection:'column', gap:12 }}>
             <div style={{ display:'flex', gap:14 }}>
