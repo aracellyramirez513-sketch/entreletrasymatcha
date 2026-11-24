@@ -274,8 +274,11 @@ export function Newsletter() {
 // ─── Footer ───────────────────────────────────────────────────────────────────
 export function Footer() {
   return (
-    <p style={{ textAlign:'center', fontSize:12, color:'var(--text-muted)', marginTop:'2rem', fontFamily:'sans-serif' }}>
-      Entre letras y matcha · Hecho con amor por Ari
-    </p>
+    <footer style={{ textAlign:'center', fontSize:12, color:'var(--text-muted)', marginTop:'2rem', fontFamily:'sans-serif' }}>
+      <p style={{ margin:0 }}>Entre letras y matcha · Hecho con amor por Ari</p>
+      <p style={{ margin:'6px 0 0', fontSize:11, opacity:0.85 }}>
+        Algunos enlaces son de afiliada. Como Afiliada de Amazon, gano comisiones por las compras que califican.
+      </p>
+    </footer>
   )
 }
