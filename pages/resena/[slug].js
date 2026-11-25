@@ -248,16 +248,30 @@ export default function DetalleLibro({ libro, slug, contexto }) {
           )}
 
           {/* Links de compra */}
-          {(libro.link_amazon || libro.link_buscalibre || libro.link_mercadolibre) && (
-            <div style={{ marginBottom:'1.5rem' }}>
-              <p style={{ fontSize:11, fontFamily:'sans-serif', textTransform:'uppercase', letterSpacing:'0.1em', color:'var(--text-muted)', margin:'0 0 0.75rem' }}>¿Dónde comprarlo?</p>
-              <div style={{ display:'flex', gap:10, flexWrap:'wrap' }}>
-                {libro.link_amazon && <a href={libro.link_amazon} target="_blank" rel="sponsored noopener noreferrer" style={{ padding:'8px 16px', borderRadius:8, background:'#fff8e7', border:'1px solid #f0c060', color:'#b07800', fontSize:13, fontFamily:'sans-serif', textDecoration:'none', fontWeight:500 }}>Amazon</a>}
-                {libro.link_buscalibre && <a href={libro.link_buscalibre} target="_blank" rel="sponsored noopener noreferrer" style={{ padding:'8px 16px', borderRadius:8, background:'#e7f5ff', border:'1px solid #60a0d0', color:'#0060a0', fontSize:13, fontFamily:'sans-serif', textDecoration:'none', fontWeight:500 }}>Buscalibre</a>}
-                {libro.link_mercadolibre && <a href={libro.link_mercadolibre} target="_blank" rel="sponsored noopener noreferrer" style={{ padding:'8px 16px', borderRadius:8, background:'#fff8e0', border:'1px solid #e0b800', color:'#806800', fontSize:13, fontFamily:'sans-serif', textDecoration:'none', fontWeight:500 }}>Mercado Libre</a>}
+          {(() => {
+            const tiendas = [
+              { link: libro.link_amazon,       nombre: 'Amazon',             detalle: 'Kindle y en inglés',    borde: '#e0b800', color: '#806800', suave: '#a08a40', icono: 'carro' },
+              { link: libro.link_buscalibre,   nombre: 'Buscalibre',         detalle: 'papel, envío a tu país', borde: '#60a0d0', color: '#0060a0', suave: '#4a86b5', icono: 'libros' },
+              { link: libro.link_mercadolibre, nombre: 'Mercado Libre Chile', detalle: 'envío en Chile',        borde: '#d9c200', color: '#2d3277', suave: '#6b6fa0', icono: 'bolsa' },
+              { link: libro.link_kobo,         nombre: 'Kobo',               detalle: 'ebook',                  borde: '#d4537e', color: '#72243e', suave: '#993556', icono: 'tablet' },
+            ].filter(t => t.link)
+            if (!tiendas.length) return null
+            return (
+              <div style={{ background:'#edf4e8', border:'1px solid var(--border)', borderRadius:12, padding:'1.25rem 1.5rem', marginBottom:'1.5rem' }}>
+                <h2 style={{ fontFamily:'Georgia, serif', fontSize:22, fontWeight:700, color:'var(--text-dark)', margin:'0 0 1rem' }}>¿Dónde comprarlo?</h2>
+                <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(220px, 1fr))', gap:12 }}>
+                  {tiendas.map(t => (
+                    <a key={t.nombre} href={t.link} target="_blank" rel="sponsored noopener noreferrer"
+                       style={{ display:'flex', alignItems:'center', justifyContent:'center', flexWrap:'wrap', gap:8, padding:'14px 16px', borderRadius:10, background:'#ffffff', border:`1.5px solid ${t.borde}`, color:t.color, fontSize:15, fontFamily:'sans-serif', fontWeight:600, textDecoration:'none', textAlign:'center' }}>
+                      <IconoTienda tipo={t.icono} />
+                      <span>{t.nombre}</span>
+                      <span style={{ fontSize:12, fontWeight:400, color:t.suave }}>· {t.detalle}</span>
+                    </a>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )
+          })()}
 
           {/* Navegación de la serie */}
           <NavSerie contexto={contexto} />
@@ -296,4 +310,13 @@ export async function getStaticProps({ params }) {
   }
 
   return { props: { libro, slug: params.slug, contexto }, revalidate: 60 }
+}
+
+// Íconos simples de línea para los botones de "¿Dónde comprarlo?"
+function IconoTienda({ tipo }) {
+  const props = { width:19, height:19, viewBox:'0 0 24 24', fill:'none', stroke:'currentColor', strokeWidth:1.8, strokeLinecap:'round', strokeLinejoin:'round', 'aria-hidden':true, style:{ flexShrink:0 } }
+  if (tipo === 'libros') return <svg {...props}><path d="M4 19V5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v14" /><path d="M9 19V7a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v12" /><path d="M14.5 6.5l3-.8a1 1 0 0 1 1.2.7l3 11.6" /><path d="M3 19h18" /></svg>
+  if (tipo === 'bolsa')  return <svg {...props}><path d="M6 8h12l-1 12H7L6 8z" /><path d="M9 8V6a3 3 0 0 1 6 0v2" /></svg>
+  if (tipo === 'tablet') return <svg {...props}><rect x="5" y="3" width="14" height="18" rx="2" /><path d="M11 17h2" /></svg>
+  return <svg {...props}><circle cx="9" cy="20" r="1.3" /><circle cx="18" cy="20" r="1.3" /><path d="M3 4h2l2.2 11h11.3L21 8H6.2" /></svg>
 }
