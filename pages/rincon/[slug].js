@@ -49,7 +49,24 @@ function esInterno(url) {
 
 function esAfiliado(url) {
   const u = String(url || '').toLowerCase()
-  return u.includes('amazon.') || u.includes('amzn.') || u.includes('buscalibre') || u.includes('mercadolibre')
+  return !!tiendaDe(url)
+}
+
+// Reconoce la tienda por el link (incluye los links cortos de afiliada, como meli.la)
+const TIENDAS = {
+  amazon:        { nombre: 'Amazon',              borde: '#e0b800', color: '#806800', icono: 'carro' },
+  buscalibre:    { nombre: 'Buscalibre',          borde: '#60a0d0', color: '#0060a0', icono: 'libros' },
+  mercadolibre:  { nombre: 'Mercado Libre Chile', borde: '#d9c200', color: '#2d3277', icono: 'bolsa' },
+  kobo:          { nombre: 'Kobo',                borde: '#d4537e', color: '#72243e', icono: 'tablet' },
+}
+
+function tiendaDe(url) {
+  const u = String(url || '').toLowerCase()
+  if (u.includes('amazon.') || u.includes('amzn.')) return TIENDAS.amazon
+  if (u.includes('buscalibre')) return TIENDAS.buscalibre
+  if (u.includes('mercadolibre') || u.includes('meli.la')) return TIENDAS.mercadolibre
+  if (u.includes('kobo.com')) return TIENDAS.kobo
+  return null
 }
 
 // Links externos se abren en otra pestaña. Los de compra llevan
@@ -65,9 +82,8 @@ function propsLink(url) {
 function etiquetaTienda(url) {
   const u = String(url || '').toLowerCase()
   if (esInterno(url)) return 'Leer mi reseña'
-  if (u.includes('amazon.') || u.includes('amzn.')) return 'Ver en Amazon'
-  if (u.includes('buscalibre')) return 'Buscalibre'
-  if (u.includes('mercadolibre')) return 'Mercado Libre'
+  const tienda = tiendaDe(url)
+  if (tienda) return tienda.nombre
   if (u.includes('goodreads')) return 'Goodreads'
   try { return new URL(url).hostname.replace(/^www\./, '') } catch (e) { return 'Ver link' }
 }
@@ -213,29 +229,34 @@ function Texto({ segs, et }) {
 function Botones({ links, et }) {
   if (!links.length) return null
   return (
-    <div style={{ display:'flex', gap:8, flexWrap:'wrap', margin:'10px 0 4px' }}>
+    <div style={{ display:'flex', gap:8, flexWrap:'wrap', alignItems:'center', margin:'10px 0 4px' }}>
       {links.map((l, i) => {
-        const principal = i === 0
+        const tienda = tiendaDe(l.url)
+        const interno = esInterno(l.url)
+        const base = { display:'inline-flex', alignItems:'center', gap:6, padding:'8px 14px', borderRadius:8, fontSize:13, fontFamily:'sans-serif', fontWeight:500, textDecoration:'none' }
+        const estilo = tienda
+          ? { ...base, background:'#ffffff', border:`1.5px solid ${tienda.borde}`, color:tienda.color }
+          : interno
+            ? { ...base, background:et.color, border:`1px solid ${et.color}`, color:'#fff' }
+            : { ...base, background:'#ffffff', border:`1px solid ${et.border}`, color:et.color }
         return (
-          <a key={i} href={l.url} {...propsLink(l.url)}
-            style={{
-              display:'inline-block',
-              padding:'7px 14px',
-              borderRadius:8,
-              fontSize:13,
-              fontFamily:'sans-serif',
-              fontWeight:500,
-              textDecoration:'none',
-              border:`1px solid ${principal ? et.color : et.border}`,
-              background: principal ? et.color : '#fff',
-              color: principal ? '#fff' : et.color,
-            }}>
-            {l.texto} {esInterno(l.url) ? '→' : '↗'}
+          <a key={i} href={l.url} {...propsLink(l.url)} style={estilo}>
+            {tienda && <IconoTienda tipo={tienda.icono} />}
+            {l.texto} {interno ? '→' : '↗'}
           </a>
         )
       })}
     </div>
   )
+}
+
+// Íconos simples de línea para los botones de tiendas
+function IconoTienda({ tipo }) {
+  const props = { width:16, height:16, viewBox:'0 0 24 24', fill:'none', stroke:'currentColor', strokeWidth:1.8, strokeLinecap:'round', strokeLinejoin:'round', 'aria-hidden':true, style:{ flexShrink:0 } }
+  if (tipo === 'libros') return <svg {...props}><path d="M4 19V5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v14" /><path d="M9 19V7a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v12" /><path d="M14.5 6.5l3-.8a1 1 0 0 1 1.2.7l3 11.6" /><path d="M3 19h18" /></svg>
+  if (tipo === 'bolsa')  return <svg {...props}><path d="M6 8h12l-1 12H7L6 8z" /><path d="M9 8V6a3 3 0 0 1 6 0v2" /></svg>
+  if (tipo === 'tablet') return <svg {...props}><rect x="5" y="3" width="14" height="18" rx="2" /><path d="M11 17h2" /></svg>
+  return <svg {...props}><circle cx="9" cy="20" r="1.3" /><circle cx="18" cy="20" r="1.3" /><path d="M3 4h2l2.2 11h11.3L21 8H6.2" /></svg>
 }
 
 const estiloParrafo = { fontSize:16, color:'var(--text-body)', lineHeight:1.85, margin:'0 0 1rem', whiteSpace:'pre-wrap' }
