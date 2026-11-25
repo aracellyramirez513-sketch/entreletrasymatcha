@@ -215,20 +215,22 @@ function LibroCard({ libro, index }) {
 
         <div style={{ display:'flex', gap:8, flexWrap:'wrap', alignItems:'center' }}>
           {libro.resena_slug && (
-            <Link href={`/resena/${libro.resena_slug}`} style={{ padding:'6px 14px', borderRadius:6, background:'var(--btn-bg)', color:'#fff', fontSize:12, fontFamily:'sans-serif', textDecoration:'none', fontWeight:500 }}>
+            <Link href={`/resena/${libro.resena_slug}`} style={{ padding:'8px 14px', borderRadius:8, background:'var(--btn-bg)', color:'#fff', fontSize:13, fontFamily:'sans-serif', textDecoration:'none', fontWeight:500 }}>
               Leer reseña completa →
             </Link>
           )}
-          {libro.link_amazon && (
-            <a href={libro.link_amazon} target="_blank" rel="sponsored noopener noreferrer" style={{ padding:'5px 12px', borderRadius:6, background:'#fff8e7', border:'1px solid #f0c060', color:'#b07800', fontSize:12, fontFamily:'sans-serif', textDecoration:'none', fontWeight:500 }}>
-              Amazon
+          {[
+            { link: libro.link_amazon,       nombre: 'Amazon',              borde: '#e0b800', color: '#806800', icono: 'carro' },
+            { link: libro.link_buscalibre,   nombre: 'Buscalibre',          borde: '#60a0d0', color: '#0060a0', icono: 'libros' },
+            { link: libro.link_mercadolibre, nombre: 'Mercado Libre Chile', borde: '#d9c200', color: '#2d3277', icono: 'bolsa' },
+            { link: libro.link_kobo,         nombre: 'Kobo',                borde: '#d4537e', color: '#72243e', icono: 'tablet' },
+          ].filter(t => t.link).map(t => (
+            <a key={t.nombre} href={t.link} target="_blank" rel="sponsored noopener noreferrer"
+               style={{ display:'inline-flex', alignItems:'center', gap:6, padding:'7px 12px', borderRadius:8, background:'#ffffff', border:`1.5px solid ${t.borde}`, color:t.color, fontSize:13, fontFamily:'sans-serif', textDecoration:'none', fontWeight:500 }}>
+              <IconoTienda tipo={t.icono} />
+              {t.nombre}
             </a>
-          )}
-          {libro.link_buscalibre && (
-            <a href={libro.link_buscalibre} target="_blank" rel="sponsored noopener noreferrer" style={{ padding:'5px 12px', borderRadius:6, background:'#e7f5ff', border:'1px solid #60a0d0', color:'#0060a0', fontSize:12, fontFamily:'sans-serif', textDecoration:'none', fontWeight:500 }}>
-              Buscalibre
-            </a>
-          )}
+          ))}
         </div>
       </div>
     </div>
@@ -247,4 +249,13 @@ export async function getStaticProps({ params }) {
   const orden = await getOrden(params.slug)
   if (!orden) return { notFound: true }
   return { props: { orden, slug: params.slug }, revalidate: 60 }
+}
+
+// Íconos simples de línea para los botones de tiendas
+function IconoTienda({ tipo }) {
+  const props = { width:16, height:16, viewBox:'0 0 24 24', fill:'none', stroke:'currentColor', strokeWidth:1.8, strokeLinecap:'round', strokeLinejoin:'round', 'aria-hidden':true, style:{ flexShrink:0 } }
+  if (tipo === 'libros') return <svg {...props}><path d="M4 19V5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v14" /><path d="M9 19V7a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v12" /><path d="M14.5 6.5l3-.8a1 1 0 0 1 1.2.7l3 11.6" /><path d="M3 19h18" /></svg>
+  if (tipo === 'bolsa')  return <svg {...props}><path d="M6 8h12l-1 12H7L6 8z" /><path d="M9 8V6a3 3 0 0 1 6 0v2" /></svg>
+  if (tipo === 'tablet') return <svg {...props}><rect x="5" y="3" width="14" height="18" rx="2" /><path d="M11 17h2" /></svg>
+  return <svg {...props}><circle cx="9" cy="20" r="1.3" /><circle cx="18" cy="20" r="1.3" /><path d="M3 4h2l2.2 11h11.3L21 8H6.2" /></svg>
 }
